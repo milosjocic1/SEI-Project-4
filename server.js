@@ -6,10 +6,12 @@ const PORT = process.env.PORT;
 
 const app = express();
 
-app.get("/", function (req, res) {
-  res.send("Hello");
+
+
+app.get("/", function(req, res) {
+    res.send("Hello");
 });
 
 app.listen(PORT, () => {
-  console.log(`Agora is running on port ${PORT}`);
-});
+    console.log(`Agora is running on port ${PORT}`);
+  });
