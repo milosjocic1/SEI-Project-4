@@ -6,7 +6,7 @@ app.get('/', function(req, res) {
     res.send("Hello");
 });
 
-const port = process.env.PORT || 3009
+const port = process.env.PORT;
 
 app.listen(port, function(){
     
