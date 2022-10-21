@@ -31,13 +31,15 @@ app.use("/", indexRouter);
 
 app.set("view engine", "ejs");
 
-mongoose.connect(
-    process.env.MongoDBURL,
-    { useNewUrlParser: true, useUnifiedTopology: true },
-    () => {
-      console.log("MongoDB connected!!!");
-    }
-  );
+
+
+// Database Connection
+mongoose.connect(process.env.DATABASE_URL,
+  { useNewURLParser: true, useUnifiedTopology: true},
+  () => {
+      console.log('MongoDB connected!')
+  }
+);
 
 app.listen(PORT, () => {
     console.log(`Agora is running on port ${PORT}`);
