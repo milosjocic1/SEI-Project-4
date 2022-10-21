@@ -4,6 +4,8 @@ require("dotenv").config();
 
 const flash = require("connect-flash");
 
+const mongoose = require("mongoose");
+
 const PORT = process.env.PORT;
 
 const app = express();
@@ -28,6 +30,16 @@ app.use(expressLayouts);
 app.use("/", indexRouter);
 
 app.set("view engine", "ejs");
+
+
+
+// Database Connection
+mongoose.connect(process.env.DATABASE_URL,
+  { useNewURLParser: true, useUnifiedTopology: true},
+  () => {
+      console.log('MongoDB connected!')
+  }
+);
 
 app.listen(PORT, () => {
     console.log(`Agora is running on port ${PORT}`);
