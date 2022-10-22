@@ -19,6 +19,7 @@ const expressLayouts = require("express-ejs-layouts");
 // Import routes here
 // const authRouter = require('./routes/auth');
 const indexRouter = require("./routes/index");
+const productRouter = require("./routes/products");
 
 app.use(expressLayouts);
 
@@ -28,6 +29,7 @@ app.use(expressLayouts);
 
 // Mount routes here
 app.use("/", indexRouter);
+app.use("/", productRouter);
 
 app.set("view engine", "ejs");
 
