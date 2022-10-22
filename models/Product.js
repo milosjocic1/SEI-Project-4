@@ -39,10 +39,10 @@ const productSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Seller'
     }],
-    favourite: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Favourite'
-    }],
+    // favourite: [{
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Favourite'
+    // }],
     transactionID: String
 }, { timestamps: true })
 

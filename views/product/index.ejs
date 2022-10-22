@@ -1,0 +1,44 @@
+<h1>Products</h1>
+
+<table class="table table-striped">
+    <tr>
+        <th>Title</th>
+        <th>Subttile</th>
+        <th>Description</th>
+        <th>Condition</th>
+        <th>Price</th>
+        <th>Category</th>
+        <th>Subcategory</th>
+        <th>Shipping Rate</th>
+        <th>Returns policy</th>
+        <th>Seller</th>
+        <!-- <th>Favourite</th> -->
+        <th>Transaction ID</th>
+        <th>Added at</th>
+    </tr>
+
+
+    <% products.forEach(function(product) { %>
+        
+        <tr>
+            <td> <a href="/product/detail?id=<%= product._id %>"><%= product.title %></a> </td>
+            <td> <%= product.subTitle %> </td>
+            <td> <%= product.description %> </td>
+            <td> <%= product.condition %> </td>
+            <td> <%= product.price %> </td>
+            <td> <%= product.category %> </td>
+            <td> <%= product.subCategory %> </td>
+            <td> <%= product.shippingRate %> </td>
+            <td> <%= product.returnsPolicy %> </td>
+            <td> <%= product.seller[0].sellerName %> </td>
+            <!-- <td> <%= product.favourite %> </td> -->
+            <td> <%= product.transactionID %> </td>
+            <td> <%= moment(product.createdAt).fromNow() %> </td>
+    
+            <td><a href="/product/edit?id=<%= product._id %>">Edit</a></td>
+            <td><a href="/product/delete?id=<%= product._id %>">Delete</a></td>
+        </tr>
+
+   <% }) %>
+
+</table>
