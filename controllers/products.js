@@ -41,7 +41,7 @@ exports.product_create_post = (req, res) => {
 }
 
 exports.product_index_get = (req, res) => {
-    Product.find().populate(['seller'])
+    Product.find().populate('seller')
     .then(products => {
         res.render('product/index', {products, moment});  // products: products, moment: moment
         // res.json({products: products})
@@ -56,7 +56,7 @@ exports.product_show_get  = (req, res) => {
     console.log(req.query.id);
     // Find ingredient by id
     // Product.findById(req.query.id).populate('recipe')
-    Product.findById(req.query.id)
+    Product.findById(req.query.id).populate('seller')
     .then(product => {
         res.render('product/detail', {product, moment});
     })

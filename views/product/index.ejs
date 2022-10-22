@@ -30,7 +30,7 @@
             <td> <%= product.subCategory %> </td>
             <td> <%= product.shippingRate %> </td>
             <td> <%= product.returnsPolicy %> </td>
-            <td> <%= product.seller.sellerName %> </td>
+            <td> <%= product.seller[0].sellerName %> </td>
             <!-- <td> <%= product.favourite %> </td> -->
             <td> <%= product.transactionID %> </td>
             <td> <%= moment(product.createdAt).fromNow() %> </td>
