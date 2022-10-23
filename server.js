@@ -16,6 +16,10 @@ app.use(express.static("public"));
 
 const expressLayouts = require("express-ejs-layouts");
 
+app.use(express.json());
+
+app.use(express.urlencoded({extended: true}));
+
 // Import routes here
 // const authRouter = require('./routes/auth');
 const indexRouter = require("./routes/index");

@@ -1,11 +1,15 @@
 const {User} = require("../models/User")
 const {Seller} = require("../models/Seller")
 
+//Require jsonwebtoken 
+const jwt = require("jsonwebtoken")
+
 //  will need to require passport configuration 
 let passport = require('../helper/ppConfig');
 
 //  Require bcrypt for hashing
 const bcrypt = require ('bcrypt');
+const { json } = require("body-parser");
 // const {Next} = require("react-bootstrap/esm/PageItem");
 // 10 rounds of hashing
 const salt = 10 
@@ -19,14 +23,14 @@ exports.auth_signup_post = async (req,res) =>{
 
     try{
 
-        let match = await User.findOne({"emailAddress": emailAddress})
+        let match = await User.findOne({emailAddress})
         console.log(match);
         if(!match) {
         
             let user = new User(req.body)
-            image = req.file.filename
-
-            let hash = bcrypt.hashSync(req.body.password, salt);
+            // image = req.file.filename
+            console.log("user password is"+ user.password)
+            let hash = await bcrypt.hashSync(req.body.password, salt);
             console.log(hash)
             user.password = hash;
             user.save()
@@ -40,18 +44,20 @@ exports.auth_signup_post = async (req,res) =>{
                     seller.save()
                     }
                 })
-                res.redirect("/")
+                // res.redirect("/")
                 res.json({"message": "User created successfully"})
             })
             .catch((err)=> {
                 console.log(err);
-                res.send("Please try again later.")
+                // res.send("Please try again later.")
+                res.json({"message": "please try again later"})
             })
 
         }
         if(match){
-            req.flash('error', 'You already have an account, please sign-in');
-            res.redirect('/auth/signin')
+            // req.flash('error', 'You already have an account, please sign-in');
+            // res.redirect('/auth/signin')
+            res.json({"message": "you already have an account, please sign-in"})
         }
     }
     catch(error){
@@ -64,10 +70,54 @@ exports.auth_signin_get =  (req, res) => {
   }
 
 // HTTP POST Signin Route
-exports.auth_signin_post = passport.authenticate('local', {
-    successRedirect: "/",
-    failureRedirect: "/"
-})  
+// exports.auth_signin_post = passport.authenticate('local', {
+//     successRedirect: "/",
+//     failureRedirect: "/auth/signin"
+// })  
+
+exports.auth_signin_post = async(req, res) => {
+    let {emailAddress, password} = req.body;
+    console.log(emailAddress)
+
+    try{
+        let user = await User.findOne({emailAddress});
+        console.log(user);
+
+        if(!user){
+            return res.json({"message": "User not found"}).status(400)
+        }
+        // password comparision
+        const isMatch = await bcrypt.compareSync(password, user.password);
+        console.log(password); //Plain text password
+        console.log(user.password); // Encrypted password from DB
+
+        if(!isMatch){
+            return res.json({"message": "Password not matched"}).status(400)
+        }
+
+        // JWT token
+        const payload = {
+            user: {
+                id: user._id,
+
+            }
+        }
+
+        jwt.sign(
+            payload,
+            process.env.SECRET,
+            { expiresIn: 3600000000000},
+            (err, token) => {
+                if(err) throw err;
+                res.json({token}).status(200)
+            }
+        )
+    }
+    catch(error){
+        console.log(error);
+        res.json({"message": "You are not logged in"}).status(400);
+    }
+}
 
 exports.auth_logout_get = (req, res) => {
     req.logout(function(err) {
