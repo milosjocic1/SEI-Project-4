@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
     
     if(authorizationToken){
         authorizationToken = authorizationToken.replace("Bearer ", "");
-        console.log(authorizationToken)        ;
+        console.log(authorizationToken);
         token = authorizationToken
     }
 

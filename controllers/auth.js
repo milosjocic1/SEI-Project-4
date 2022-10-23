@@ -10,7 +10,7 @@ let passport = require('../helper/ppConfig');
 //  Require bcrypt for hashing
 const bcrypt = require ('bcrypt');
 const { json } = require("body-parser");
-// const {Next} = require("react-bootstrap/esm/PageItem");
+
 // 10 rounds of hashing
 const salt = 10 
 
