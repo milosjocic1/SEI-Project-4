@@ -25,12 +25,13 @@ exports.product_create_post = (req, res) => {
     let product = new Product(req.body);
     product.save()
     .then(() => {
-        req.body.seller.forEach(seller => {
+        // req.body.seller.forEach(seller => {
+            let seller = product.seller;
             Seller.findById(seller, (error, seller) => {
-                seller.product.push(product);
+                seller.product.push(product.id);
                 seller.save();
             })
-        });
+        // });
         // res.redirect('/product/index');
         res.json({product})
     })
@@ -58,8 +59,8 @@ exports.product_show_get  = (req, res) => {
     // Product.findById(req.query.id).populate('recipe')
     Product.findById(req.query.id).populate('seller')
     .then(product => {
-        res.render('product/detail', {product, moment});
-        // res.json({product})
+        // res.render('product/detail', {product, moment});
+        res.json({product})
     })
     .catch((err) => {
        console.log(err);
@@ -94,7 +95,7 @@ exports.product_edit_get = (req, res) => {
 
 exports.product_update_put = (req, res) => {
     console.log(req.body.id);
-    // console.log(req.body._id);
+    console.log(req.body._id);
     // Product.findByIdAndUpdate(req.body.id, req.body, {new: true})
     Product.findByIdAndUpdate(req.body._id, req.body, {new: true})
     // .then((product) => {}) for React
