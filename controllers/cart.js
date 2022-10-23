@@ -4,103 +4,78 @@ const {Product} = require("../models/Product");
 
 const moment = require('moment');
 
-exports.cart_create_get = (req, res) => {
-    // res.render();
-    Product.find()
-    .then((products) => {
-    res.render("cart/add", {products});
-    })
-    .catch((err) => {
-        console.log(err);
-    })
-}
-
-// HTTP POST for product
-
-exports.cart_create_post = (req, res) => {
-    console.log(req.body);
-    // res.send("POST WORKS")
-    // Saving the data into the database
-    let cart = new Cart(req.body);
-    cart.save()
-    .then(() => {
-        req.body.product.forEach(product => {
-            Product.findById(product, (error, seller) => {
-                seller.product.push(product);
-                seller.save();
-            })
-        });
-        res.redirect('/cart/index');
-        // res.json({product})
-    })
-    .catch((err) => {
-        console.log(err);
-        res.send("Please try again later");
-    })
-}
+// exports.cart_create_get = (req, res) => {
+//     // res.render();
+//     Product.find()
+//     .then((products) => {
+//     res.render("cart/add", {products});
+//     })
+//     .catch((err) => {
+//         console.log(err);
+//     })
+// }
 
 exports.cart_index_get = (req, res) => {
-    Cart.find().populate('product')
-    .then(cart => {
-        res.render('cart/index', {cart, moment});  // products: products, moment: moment
-        // res.json({products: products})
-    })
-    .catch((err) => {
-        console.log(err);
-    })
+    res.render("cart/index")
 }
 
-// Won't need to be used in React
-exports.product_show_get  = (req, res) => {
-    console.log(req.query.id);
-    // Find ingredient by id
-    // Product.findById(req.query.id).populate('recipe')
-    Product.findById(req.query.id).populate('seller')
-    .then(product => {
-        res.render('product/detail', {product, moment});
-    })
-    .catch((err) => {
-       console.log(err);
-    })
-}
+// exports.cart_addItem_post = (req, res) => {
+//     const productID = `_${req.query.id}`
+//     const product = Product.findById(productID);
+//     const userID = `_${req.query.user}`;
+//     const user = User.findById(userID); //TODO: the logged in user id
+//     let cart = new Cart({
+//         price: product.price,
+//         shippingRate: product.shippingRate,
+//         user: [{user}],
+//         product: [{product}]
 
-exports.cart_delete_get = (req, res) => {
-    console.log(req.query.id);
+//     });
+//     cart.save()
+//     .then(() => {
+//             user.transaction.push({cart});
+//             return res.status(201).json({cart});
+//         }) 
+//     .catch ((err) => {
+//       console.log(err);
+//       res.status(500).send("Something went wrong");
+//     })
+//   };
 
-    Product.findByIdAndDelete(req.query.id)
-    // .then((product) => {}) for React
-    .then(() => {
-        res.redirect(('/product/index'));
-        // res.json({product})
-    })
-    .catch((err) => {
-        console.log(err);
-    })
-}
-
-
-exports.product_edit_get = (req, res) => {
-    Product.findById(req.query.id)
-    .then((product) => {
-        res.render('product/edit', {product});
-        // res.json({product})
-    })
-    .catch((err) => {
-        console.log(err);
-    })
-}
-
-exports.product_update_put = (req, res) => {
-    console.log(req.body.id);
-    // console.log(req.body._id);
-    Product.findByIdAndUpdate(req.body.id, req.body, {new: true})
-    // Product.findByIdAndUpdate(req.body._id, req.body, {new: true})
-    // .then((product) => {}) for React
-    .then(() => {
-        res.redirect('/product/index');
-        // res.json({product})
-    })
-    .catch((err) => {
-        console.log(err);
-    })
-}
+exports.cart_addItem_post = async (req, res) => {
+    const { productId, quantity, name, price } = req.body;
+    
+    const userId = "63541db8b75e63463d5178b2"; //TODO: the logged in user id
+  
+    try {
+      let cart = await Cart.findOne({ userId });
+  
+      if (cart) {
+        //cart exists for user
+        let itemIndex = cart.products.findIndex(p => p.productId == productId);
+  
+        if (itemIndex > -1) {
+          //product exists in the cart, update the quantity
+          let productItem = cart.products[itemIndex];
+          productItem.quantity = quantity;
+          cart.products[itemIndex] = productItem;
+        } else {
+          //product does not exists in cart, add new item
+          cart.products.push({ productId, quantity, name, price });
+        }
+        cart = await cart.save();
+        return res.status(201).json(cart);
+      } else {
+        //no cart for user, create new cart
+        const newCart = await Cart.create({
+          userId,
+          products: [{ productId, quantity, name, price }]
+        });
+        
+        return res.status(201).json(newCart);
+      }
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Something went wrong");
+    }
+  };
