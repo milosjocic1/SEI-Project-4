@@ -17,9 +17,9 @@ app.use(express.static("public"));
 const expressLayouts = require("express-ejs-layouts");
 
 // Import routes here
-// const authRouter = require('./routes/auth');
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
+const usersRouter = require("./routes/users");
 
 app.use(expressLayouts);
 
@@ -45,6 +45,7 @@ app.use(passport.session());
 // Mount routes here
 app.use("/", indexRouter);
 app.use("/", authRouter);
+app.use("/", usersRouter);
 
 app.set("view engine", "ejs");
 

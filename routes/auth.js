@@ -1,12 +1,12 @@
-const express = require("express")
+const express = require("express");
 
-const router = express.Router()
+const router = express.Router();
 
 // router.use(express.urlencoded({ extended: true }));
-router.use(express.json())
+router.use(express.json());
 
-const upload = require("../helper/fileUpload")
-const authCntrl = require("../controllers/auth")
+const upload = require("../helper/fileUpload");
+const authCntrl = require("../controllers/auth");
 
 
 router.get("/auth/signup", authCntrl.auth_signup_get); // not used
