@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const bcrypt = require('bcrypt');
+
 const userSchema = mongoose.Schema({
 
     firstName: {
@@ -24,8 +26,7 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        minlenth:[6],
-        maxlength: [20],
+        minlenth:[6, "Your password is too weak"],
         required: true,
     },
     profilePhoto: String,
@@ -34,7 +35,6 @@ const userSchema = mongoose.Schema({
             type: String,
             minlength: [4],
             maxlength: [99],
-            required: true
         },
         addressLine2: {
             type: String,
@@ -45,19 +45,16 @@ const userSchema = mongoose.Schema({
             type: String,
             minlength: [4],
             maxlength: [99],
-            required: true
         },
         county: {
             type: String,
             minlength: [4],
             maxlength: [99],
-            required: true
         },
         postCode: {
             type: String,
             minlength: [4],
             maxlength: [6],
-            required: true
         }
     },
     billingAddress: {
@@ -65,7 +62,6 @@ const userSchema = mongoose.Schema({
             type: String,
             minlength: [4],
             maxlength: [99],
-            required: true
         },
         addressLine2: {
             type: String,
@@ -76,19 +72,16 @@ const userSchema = mongoose.Schema({
             type: String,
             minlength: [4],
             maxlength: [99],
-            required: true
         },
         county: {
             type: String,
             minlength: [4],
             maxlength: [99],
-            required: true
         },
         postCode: {
             type: String,
             minlength: [4],
             maxlength: [6],
-            required: true
         }
     },
     phoneNumber: {
@@ -113,6 +106,13 @@ const userSchema = mongoose.Schema({
 {
     timestamps: true   
 });
+
+// function to verify function
+userSchema.methods.verifyPassword = function(password) {
+    console.log('password from user: ' + password);
+    console.log('password from db: ' + this.password);
+    return bcrypt.compareSync(password, this.password);
+}
 
 const User = mongoose.model('User', userSchema);
 
