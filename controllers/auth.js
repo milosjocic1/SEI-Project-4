@@ -14,9 +14,12 @@ const { json } = require("body-parser");
 // 10 rounds of hashing
 const salt = 10 
 
+// __________________________________ AUTH SIGNUP GET __________________________________ //
 exports.auth_signup_get = (req, res) => {
     res.render("auth/signup")
 }
+
+// __________________________________ AUTH SIGNUP POST __________________________________ //
 
 exports.auth_signup_post = async (req,res) =>{
     let emailAddress = req.body.emailAddress;
@@ -65,6 +68,8 @@ exports.auth_signup_post = async (req,res) =>{
     }
 }
 
+// __________________________________ AUTH SIGNIN GET __________________________________ //
+
 exports.auth_signin_get =  (req, res) => {
     res.render("auth/signin");
   }
@@ -74,6 +79,8 @@ exports.auth_signin_get =  (req, res) => {
 //     successRedirect: "/",
 //     failureRedirect: "/auth/signin"
 // })  
+
+// __________________________________ AUTH SIGNUP POST __________________________________ //
 
 exports.auth_signin_post = async(req, res) => {
     let {emailAddress, password} = req.body;
@@ -118,6 +125,8 @@ exports.auth_signin_post = async(req, res) => {
         res.json({"message": "You are not logged in"}).status(400);
     }
 }
+
+// __________________________________ AUTH LOGOUT GET __________________________________ //
 
 exports.auth_logout_get = (req, res) => {
     req.logout(function(err) {
