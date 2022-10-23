@@ -20,6 +20,9 @@ const expressLayouts = require("express-ejs-layouts");
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
+const productRouter = require("./routes/products");
+// const cartRouter = require("./routes/cart");
+
 
 app.use(expressLayouts);
 
@@ -46,6 +49,8 @@ app.use(passport.session());
 app.use("/", indexRouter);
 app.use("/", authRouter);
 app.use("/", usersRouter);
+app.use("/", productRouter);
+// app.use("/", cartRouter);
 
 app.set("view engine", "ejs");
 

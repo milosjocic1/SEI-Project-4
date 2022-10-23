@@ -14,7 +14,6 @@ const sellerSchema = mongoose.Schema({
         maxlength: [500], 
         required: true       
     },
-
     user: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
