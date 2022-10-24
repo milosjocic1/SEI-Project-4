@@ -15,16 +15,5 @@ exports.user_dashboard_get = (req, res) => {
     })
 }
 
-exports.user_profile_get = (req, res) => {
-    //
 
-}
-
-exports.user_profile_update_put = (req, res) => {
-    //
-}
-
-exports.user_profile_delete_get = (req, res) => {
-    //
-}
 

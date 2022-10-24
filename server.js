@@ -28,7 +28,7 @@ const usersRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const transactionRouter = require("./routes/transactions");
 // const cartRouter = require("./routes/cart");
-const cartRouter = require("./routes/cart");
+// const cartRouter = require("./routes/cart");
 
 app.use(expressLayouts);
 
@@ -64,7 +64,7 @@ app.use("/", usersRouter);
 app.use("/", productRouter);
 app.use("/", transactionRouter);
 // app.use("/", cartRouter);
-app.use("/", cartRouter);
+// app.use("/", cartRouter);
 
 app.set("view engine", "ejs");
 

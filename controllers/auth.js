@@ -46,6 +46,7 @@ exports.auth_signup_post = async (req,res) =>{
                 password: req.body.password,
                 cloudinary_id: result.public_id
             })
+            console.log(user.userRole)
             user.password = hash;
 
             user.save()
@@ -150,3 +151,39 @@ exports.auth_logout_get = (req, res) => {
         res.redirect('/auth/signin')
     })
 }
+
+// __________________________________ AUTH UPDATE GET __________________________________ // 
+
+exports.auth_update_get = async (req, res) => {
+    let user = await User.findById("63541bfb85ffc46174c1ac43")
+    let seller = ""
+    try{
+        if(user.userRole === "seller"){
+            seller = Seller.findOne({user})
+        }
+        res.render("auth/update",{user, seller})
+    }
+    catch(error){
+        console.log(error)
+    }
+}
+
+exports.auth_update_post = async (req, res) => {
+    let user = await User.findById("63541bfb85ffc46174c1ac43")
+    let seller = ""
+    try{
+        if(user.userRole === "seller"){
+            seller = Seller.findOne({user})
+        }
+        res.render("auth/update",{user, seller})
+    }
+    catch(error){
+        console.log(error)
+    }
+}
+
+// // __________________________________ AUTH DELETE GET __________________________________ //
+
+// exports.auth_delete_get = (req, res) => {
+//     //
+// }
