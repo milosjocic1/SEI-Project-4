@@ -1,14 +1,14 @@
-// const express = require("express");
+const express = require("express");
 
-// const methodOverride = require('method-override');
+const methodOverride = require('method-override');
 
-// const router = express.Router();
+const router = express.Router();
 
-// router.use(methodOverride('_method'));
+router.use(methodOverride('_method'));
 
 // // router.use(express.urlencoded({ extended: true }));
-// router.use(express.json());
-// const cartCtrl = require("../controllers/cart");
+router.use(express.json());
+const cartCtrl = require("../controllers/cart");
 
 // router.get('/cart/add', cartCtrl.cart_create_get);
 // router.post('/cart/add', cartCtrl.cart_create_post);
@@ -23,4 +23,4 @@ router.delete('/cart', cartCtrl.removeItem);
 // router.get('/cart/edit', cartCtrl.cart_edit_get);
 // router.put('/cart/update', cartCtrl.cart_update_put);
 
-// module.exports = router;
+module.exports = router;

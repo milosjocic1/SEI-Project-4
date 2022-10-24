@@ -28,7 +28,7 @@ const usersRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const cartRouter = require("./routes/cart");
 const reviewRouter = require("./routes/reviews");
-const sellersRouter = require("./routes/reviews");
+const sellersRouter = require("./routes/sellers");
 const transactionRouter = require("./routes/transactions")
 
 
@@ -68,8 +68,7 @@ app.use("/", cartRouter);
 app.use("/", reviewRouter);
 app.use("/", transactionRouter);
 app.use("/", sellersRouter);
-// app.use("/", cartRouter);
-// app.use("/", cartRouter);
+
 
 app.set("view engine", "ejs");
 
