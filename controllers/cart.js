@@ -15,7 +15,9 @@
 //     })
 // }
 
-// // HTTP POST for product
+// exports.cart_index_get = (req, res) => {
+//     res.render("cart/index")
+// }
 
 // exports.cart_create_post = (req, res) => {
 //     console.log(req.body);
@@ -39,16 +41,9 @@
 //     })
 // }
 
-// exports.cart_index_get = (req, res) => {
-//     Cart.find().populate('product')
-//     .then(cart => {
-//         res.render('cart/index', {cart, moment});  // products: products, moment: moment
-//         // res.json({products: products})
-//     })
-//     .catch((err) => {
-//         console.log(err);
-//     })
-// }
+exports.addItemToCart = async (req, res) => {
+  let userId = req.query.userId;
+  let user = await User.exists({ _id: userId });
 
 // // Won't need to be used in React
 // exports.product_show_get  = (req, res) => {
@@ -90,17 +85,76 @@
 //     })
 // }
 
-// exports.product_update_put = (req, res) => {
-//     console.log(req.body.id);
-//     // console.log(req.body._id);
-//     Product.findByIdAndUpdate(req.body.id, req.body, {new: true})
-//     // Product.findByIdAndUpdate(req.body._id, req.body, {new: true})
-//     // .then((product) => {}) for React
-//     .then(() => {
-//         res.redirect('/product/index');
-//         // res.json({product})
-//     })
-//     .catch((err) => {
-//         console.log(err);
-//     })
-// }
+    return res.status(201).send({ status: true, newCart: newCart });
+  }
+};
+
+exports.getCart = async (req, res) => {
+    let userId = req.query.userId;
+    let user = await User.exists({ _id: userId });
+  
+    if (!userId || !isValidObjectId(userId) || !user)
+      return res.status(400).send({ status: false, message: "Invalid user ID" });
+  
+    let cart = await Cart.findOne({ userId: userId });
+    if (!cart)
+      return res
+        .status(404)
+        .send({ status: false, message: "Cart not found for this user" });
+  
+    res.status(200).send({ status: true, cart: cart });
+  };
+
+// exports.decreaseQuantity = async (req, res) => {
+//   // use add product endpoint for increase quantity
+//   let userId = req.params.userId;
+//   let user = await User.exists({ _id: userId });
+//   let productId = req.body.productId;
+
+//   if (!userId || !isValidObjectId(userId) || !user)
+//     return res.status(400).send({ status: false, message: "Invalid user ID" });
+
+//   let cart = await Cart.findOne({ userId: userId });
+//   if (!cart)
+//     return res
+//       .status(404)
+//       .send({ status: false, message: "Cart not found for this user" });
+
+//   let itemIndex = cart.products.findIndex((p) => p.productId == productId);
+
+//   if (itemIndex > -1) {
+//     let productItem = cart.products[itemIndex];
+//     productItem.quantity -= 1;
+//     cart.products[itemIndex] = productItem;
+//     cart = await cart.save();
+//     return res.status(200).send({ status: true, updatedCart: cart });
+//   }
+//   res
+//     .status(400)
+//     .send({ status: false, message: "Item does not exist in cart" });
+// };
+
+exports.removeItem = async (req, res) => {
+  let userId = req.query.userId;
+  let user = await User.exists({ _id: userId });
+  let productId = req.body.productId;
+
+  if (!userId || !isValidObjectId(userId) || !user)
+    return res.status(400).send({ status: false, message: "Invalid user ID" });
+
+  let cart = await Cart.findOne({ userId: userId });
+  if (!cart)
+    return res
+      .status(404)
+      .send({ status: false, message: "Cart not found for this user" });
+
+  let itemIndex = cart.products.findIndex((p) => p.productId == productId);
+  if (itemIndex > -1) {
+    cart.products.splice(itemIndex, 1);
+    cart = await cart.save();
+    return res.status(200).send({ status: true, updatedCart: cart });
+  }
+  res
+    .status(400)
+    .send({ status: false, message: "Item does not exist in cart" });
+};
