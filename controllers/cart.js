@@ -1,6 +1,7 @@
 const {Cart} = require("../models/Cart");
 const {User} = require("../models/User");
 const {Product} = require("../models/Product");
+const { isValidObjectId } = require("mongoose");
 
 const moment = require('moment');
 
@@ -42,40 +43,107 @@ exports.cart_index_get = (req, res) => {
 //     })
 //   };
 
-exports.cart_addItem_post = async (req, res) => {
-    const { productId, quantity, name, price } = req.body;
-    
-    const userId = "63541db8b75e63463d5178b2"; //TODO: the logged in user id
-  
-    try {
-      let cart = await Cart.findOne({ userId });
-  
-      if (cart) {
-        //cart exists for user
-        let itemIndex = cart.products.findIndex(p => p.productId == productId);
-  
-        if (itemIndex > -1) {
-          //product exists in the cart, update the quantity
-          let productItem = cart.products[itemIndex];
-          productItem.quantity = quantity;
-          cart.products[itemIndex] = productItem;
-        } else {
-          //product does not exists in cart, add new item
-          cart.products.push({ productId, quantity, name, price });
-        }
-        cart = await cart.save();
-        return res.status(201).json(cart);
-      } else {
-        //no cart for user, create new cart
-        const newCart = await Cart.create({
-          userId,
-          products: [{ productId, quantity, name, price }]
-        });
-        
-        return res.status(201).json(newCart);
-      }
-    } catch (err) {
-      console.log(err);
-      res.status(500).send("Something went wrong");
+exports.addItemToCart = async (req, res) => {
+  let userId = req.params.userId;
+  let user = await User.exists({ _id: userId });
+
+  if (!userId || !isValidObjectId(userId) || !user)
+    return res.status(400).send({ status: false, message: "Invalid user ID" });
+
+  let productId = req.body.productId;
+  if (!productId)
+    return res.status(400).send({ status: false, message: "Invalid product" });
+
+  let cart = await Cart.findOne({ userId: userId });
+
+  if (cart) {
+    let itemIndex = cart.products.findIndex((p) => p.productId == productId);
+
+    if (itemIndex > -1) {
+      let productItem = cart.products[itemIndex];
+      productItem.quantity += 1;
+      cart.products[itemIndex] = productItem;
+    } else {
+      cart.products.push({ productId: productId, quantity: 1 });
     }
-  };
+    cart = await cart.save();
+    return res.status(200).send({ status: true, updatedCart: cart });
+  } else {
+    const newCart = await Cart.create({
+      userId,
+      products: [{ productId: productId, quantity: 1 }],
+    });
+
+    return res.status(201).send({ status: true, newCart: newCart });
+  }
+};
+
+exports.getCart = async (req, res) => {
+  let userId = req.params.userId;
+  let user = await User.exists({ _id: userId });
+
+  if (!userId || !isValidObjectId(userId) || !user)
+    return res.status(400).send({ status: false, message: "Invalid user ID" });
+
+  let cart = await Cart.findOne({ userId: userId });
+  if (!cart)
+    return res
+      .status(404)
+      .send({ status: false, message: "Cart not found for this user" });
+
+  res.status(200).send({ status: true, cart: cart });
+};
+
+exports.decreaseQuantity = async (req, res) => {
+  // use add product endpoint for increase quantity
+  let userId = req.params.userId;
+  let user = await User.exists({ _id: userId });
+  let productId = req.body.productId;
+
+  if (!userId || !isValidObjectId(userId) || !user)
+    return res.status(400).send({ status: false, message: "Invalid user ID" });
+
+  let cart = await Cart.findOne({ userId: userId });
+  if (!cart)
+    return res
+      .status(404)
+      .send({ status: false, message: "Cart not found for this user" });
+
+  let itemIndex = cart.products.findIndex((p) => p.productId == productId);
+
+  if (itemIndex > -1) {
+    let productItem = cart.products[itemIndex];
+    productItem.quantity -= 1;
+    cart.products[itemIndex] = productItem;
+    cart = await cart.save();
+    return res.status(200).send({ status: true, updatedCart: cart });
+  }
+  res
+    .status(400)
+    .send({ status: false, message: "Item does not exist in cart" });
+};
+
+exports.removeItem = async (req, res) => {
+  let userId = req.params.userId;
+  let user = await User.exists({ _id: userId });
+  let productId = req.body.productId;
+
+  if (!userId || !isValidObjectId(userId) || !user)
+    return res.status(400).send({ status: false, message: "Invalid user ID" });
+
+  let cart = await Cart.findOne({ userId: userId });
+  if (!cart)
+    return res
+      .status(404)
+      .send({ status: false, message: "Cart not found for this user" });
+
+  let itemIndex = cart.products.findIndex((p) => p.productId == productId);
+  if (itemIndex > -1) {
+    cart.products.splice(itemIndex, 1);
+    cart = await cart.save();
+    return res.status(200).send({ status: true, updatedCart: cart });
+  }
+  res
+    .status(400)
+    .send({ status: false, message: "Item does not exist in cart" });
+};
