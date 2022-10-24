@@ -68,8 +68,6 @@ app.use("/", cartRouter);
 app.use("/", reviewRouter);
 app.use("/", transactionRouter);
 app.use("/", sellersRouter);
-// app.use("/", cartRouter);
-// app.use("/", cartRouter);
 
 app.set("view engine", "ejs");
 
