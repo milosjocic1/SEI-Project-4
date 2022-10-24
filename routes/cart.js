@@ -12,11 +12,11 @@ const cartCtrl = require("../controllers/cart");
 
 // router.get('/cart/add', cartCtrl.cart_create_get);
 // router.post('/cart/add', cartCtrl.cart_create_post);
-router.get('/cart/index', cartCtrl.cart_index_get);
-router.post("cart/:userId", cartCtrl.addItemToCart);
-router.get("cart/:userId", cartCtrl.getCart);
-router.patch("cart/:userId", cartCtrl.decreaseQuantity);
-router.delete("cart/:userId", cartCtrl.removeItem);
+// router.get('/cart/index', cartCtrl.cart_index_get);
+router.post('/cart', cartCtrl.addItemToCart);
+router.get('/cart', cartCtrl.getCart);
+// router.patch('/cart', cartCtrl.decreaseQuantity);
+router.delete('/cart', cartCtrl.removeItem);
 // router.post('/cart/add', cartCtrl.cart_addItem_post);
 // router.get('/cart/detail', cartCtrl.cart_show_get);
 // router.get('/cart/delete', cartCtrl.cart_delete_get);
