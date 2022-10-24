@@ -14,6 +14,9 @@ const { json } = require("body-parser");
 // 10 rounds of hashing
 const salt = 10 
 
+const cloudinary = require("../utils/cloudinary");
+const upload = require("../utils/multer");
+
 // __________________________________ AUTH SIGNUP GET __________________________________ //
 exports.auth_signup_get = (req, res) => {
     res.render("auth/signup")
@@ -30,12 +33,21 @@ exports.auth_signup_post = async (req,res) =>{
         console.log(match);
         if(!match) {
         
-            let user = new User(req.body)
             // image = req.file.filename
-            console.log("user password is"+ user.password)
+            const result = await cloudinary.uploader.upload(req.file.path);
+
             let hash = await bcrypt.hashSync(req.body.password, salt);
             console.log(hash)
+
+            let user = new User({
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                emailAddress: req.body.emailAddress,
+                password: req.body.password,
+                cloudinary_id: result.public_id
+            })
             user.password = hash;
+
             user.save()
             .then(() => {
                 User.findById(user)
