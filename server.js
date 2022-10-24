@@ -29,7 +29,7 @@ const productRouter = require("./routes/products");
 const cartRouter = require("./routes/cart");
 const reviewRouter = require("./routes/reviews");
 const sellersRouter = require("./routes/sellers");
-const transactionRouter = require("./routes/transactions");
+const transactionRouter = require("./routes/transactions")
 
 
 

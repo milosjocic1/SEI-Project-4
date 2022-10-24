@@ -119,6 +119,7 @@ exports.auth_signin_post = async(req, res) => {
         const payload = {
             user: {
                 id: user._id,
+                name: user.firstName
 
             }
         }
