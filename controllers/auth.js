@@ -17,6 +17,7 @@ const salt = 10
 const cloudinary = require("../utils/cloudinary");
 const upload = require("../utils/multer");
 
+
 // __________________________________ AUTH SIGNUP GET __________________________________ //
 exports.auth_signup_get = (req, res) => {
     res.render("auth/signup")
@@ -114,7 +115,6 @@ exports.auth_signin_post = async(req, res) => {
         if(!isMatch){
             return res.json({"message": "Password not matched"}).status(400)
         }
-
         // JWT token
         const payload = {
             user: {
@@ -122,7 +122,6 @@ exports.auth_signin_post = async(req, res) => {
 
             }
         }
-
         jwt.sign(
             payload,
             process.env.SECRET,
@@ -144,10 +143,8 @@ exports.auth_signin_post = async(req, res) => {
 exports.auth_logout_get = (req, res) => {
     req.logout(function(err) {
         if(err) {
-            req.flash('error', 'You have not logged out successfully');
             return Next(err);
         }
-        req.flash('success', 'You are logged out successfully');
         res.redirect('/auth/signin')
     })
 }
@@ -155,27 +152,44 @@ exports.auth_logout_get = (req, res) => {
 // __________________________________ AUTH UPDATE GET __________________________________ // 
 
 exports.auth_update_get = async (req, res) => {
-    let user = await User.findById("63541bfb85ffc46174c1ac43")
+    let user = await User.findById("63541db8b75e63463d5178b2") // NEEDS TO BE UPDATED WHEN SIGNIN IS WORKING ON FE
     let seller = ""
     try{
         if(user.userRole === "seller"){
-            seller = Seller.findOne({user})
+            seller = await Seller.find({user: {$in: [user._id]}})
+            .then(seller => {
+                return seller[0]
+            })
         }
-        res.render("auth/update",{user, seller})
+        res.status(200).json({user, seller})
     }
     catch(error){
         console.log(error)
     }
 }
 
+// __________________________________ AUTH UPDATE POST __________________________________ //
+
 exports.auth_update_post = async (req, res) => {
-    let user = await User.findById("63541bfb85ffc46174c1ac43")
+    let user = await User.findById("63541db8b75e63463d5178b2") // NEEDS TO BE UPDATED WHEN SIGNIN IS WORKING ON FE
     let seller = ""
     try{
+        console.log(req.body)
+        User.findByIdAndUpdate(user._id, req.body)
         if(user.userRole === "seller"){
-            seller = Seller.findOne({user})
+            console.log("user is " +user)
+            seller = await Seller.find({user: {$in: [user._id]}})
+            .then(seller => {
+                return seller[0]
+            })
+            Seller.findByIdAndUpdate(seller._id, req.body)
+            // res.redirect("/seller/dashboard")
+            res.status(200).json({user, seller})
         }
-        res.render("auth/update",{user, seller})
+        else{
+            // res.redirect("/user/dashboard")
+            res.status(200).json({user, seller})
+        }
     }
     catch(error){
         console.log(error)

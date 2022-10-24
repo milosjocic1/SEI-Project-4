@@ -87,7 +87,7 @@ exports.addItemToCart = async (req, res) => {
 
     return res.status(201).send({ status: true, newCart: newCart });
   }
-};
+
 
 exports.getCart = async (req, res) => {
     let userId = req.query.userId;

@@ -1,18 +1,18 @@
 const {User} = require("../models/User")
 const {Favourite} = require("../models/Favourite")
 const {Review} = require("../models/Review")
-const {Transaction} = require("../models/Transaction")
 
 // __________________________________ USER DASHBOARD GET  __________________________________ //
 
-exports.user_dashboard_get = (req, res) => {
-    User.findById("63541bfb85ffc46174c1ac43")
-    .populate("favourite review transaction")
-    .then((user) =>
-    res.json({user}))
-    .catch((err) => {
-        console.log(err)
-    })
+exports.user_dashboard_get = async (req, res) => {
+    let user = await User.findById("63541db8b75e63463d5178b2")
+    .populate("favourite review")
+    try {
+        res.status(200).json({user})
+        }
+    catch(error){
+        console.log(error)
+     }
 }
 
 

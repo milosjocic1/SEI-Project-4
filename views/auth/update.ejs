@@ -2,7 +2,7 @@
     <h1> Update Account </h1>
 
     <br><br>
-    <form method="POST" action="/auth/update" enctype="multipart/form-data">
+    <form method="POST" action="/auth/update">
     
         <input type="hidden" name="userType" class="form-control" value="<%= user.userRole %>"/>  
         <input type="hidden" name="_id" class="form-control" value="<%= user._id %>"/> 
@@ -18,27 +18,21 @@
                 <input type="text" class="form-control" id="lastNameInput" name="lastName"  value="<%= user.lastName %>">
             </div>
             <br>
-            <div>
-                <label  for="image">Profile photo</label><br>
-                <input  type="file" id="image" name="image">
-            </div>
     
         <!-- basic seller info -->
-                <br>
                 <div class="sellerUpdate">
                     <label for="sellerName">Seller Name</label>
-                    <input type="text" class="form-control" id="sellerNameInput" name="sellerName"  value="">
+                    <input type="text" class="form-control" id="sellerNameInput" name="sellerName"  value="<%= seller.sellerName %>">
+                    <br>
                 </div>
-                <br>
                 <div class="sellerUpdate">
                     <label for="exampleFormControlTextarea1">Seller Bio</label>
-                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="bio"  value=""></textarea>
+                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="bio"><%= seller.bio%></textarea>
+                    <br>
                 </div>
-                <br>
                 <!-- <label  for="image"> Upload a header image for your seller page</label><br>
                 <input  type="file" id="image" name="headerPhoto"> -->
-    
-            <br>
+
         <!-- security info -->
             <div>
                 <label for="emailAddress">Email address</label>
@@ -53,15 +47,9 @@
 
     <script>
         let seller = '<%-seller%>'
-        $('.sellerUpdate').hide()
-        $('input:checkbox[name="userRole"]').change(function(){
-        
-            if (seller === null) {
-                $('.sellerUpdate').hide()
-            }
-            
-            if ($(this).val() == 'buyer') {
-                $('.sellerUpdate').hide()
-            }
+
+        $(document).ready(function() {
+        (seller === "")? $('.sellerUpdate').hide(): $('.sellerUpdate').show()
         })
+            
     </script>
