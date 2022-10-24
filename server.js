@@ -4,6 +4,11 @@ require("dotenv").config();
 
 const flash = require("connect-flash");
 
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+const stripePublicKey = process.env.STRIPE_PUBLIC_KEY
+
+console.log(stripePublicKey,stripeSecretKey)
+
 const mongoose = require("mongoose");
 
 const PORT = process.env.PORT
@@ -23,6 +28,7 @@ const usersRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const cartRouter = require("./routes/cart");
 const reviewRouter = require("./routes/reviews");
+const sellersRouter = require("./routes/reviews");
 
 
 app.use(expressLayouts);
@@ -42,6 +48,12 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
+// Sharing the user information with all pages
+app.use(function(req, res, next){
+  res.locals.currentUser = req.user
+  next();
+})
+
 // app.get("/", function(req, res) {
 //     res.send("Hello");
 // });
@@ -53,6 +65,10 @@ app.use("/", usersRouter);
 app.use("/", productRouter);
 app.use("/", cartRouter);
 app.use("/", reviewRouter);
+app.use("/", transactionRouter);
+app.use("/", sellersRouter);
+// app.use("/", cartRouter);
+// app.use("/", cartRouter);
 
 app.set("view engine", "ejs");
 
