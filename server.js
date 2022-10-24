@@ -22,6 +22,7 @@ const authRouter = require("./routes/auth");
 const usersRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const cartRouter = require("./routes/cart");
+const reviewRouter = require("./routes/reviews");
 
 
 app.use(expressLayouts);
@@ -51,6 +52,7 @@ app.use("/", authRouter);
 app.use("/", usersRouter);
 app.use("/", productRouter);
 app.use("/", cartRouter);
+app.use("/", reviewRouter);
 
 app.set("view engine", "ejs");
 
