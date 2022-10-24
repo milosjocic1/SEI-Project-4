@@ -46,6 +46,7 @@ exports.auth_signup_post = async (req,res) =>{
                 password: req.body.password,
                 cloudinary_id: result.public_id
             })
+            console.log(user.userRole)
             user.password = hash;
 
             user.save()
