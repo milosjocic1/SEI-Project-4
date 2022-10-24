@@ -62,12 +62,9 @@ app.use("/", indexRouter);
 app.use("/", authRouter);
 app.use("/", usersRouter);
 app.use("/", productRouter);
-<<<<<<< HEAD
 app.use("/", transactionRouter);
 // app.use("/", cartRouter);
-=======
 app.use("/", cartRouter);
->>>>>>> 49a48522b5b25a897e89339f76a226a623ba7122
 
 app.set("view engine", "ejs");
 
