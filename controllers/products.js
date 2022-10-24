@@ -69,7 +69,20 @@ exports.product_show_get  = (req, res) => {
 
 exports.product_delete_get = (req, res) => {
     console.log(req.query.id);
-
+    let product = Product.findById(req.query.id);
+    console.log(product);
+    let seller = product.seller;
+    Seller.findById(seller, (error, seller) => {
+        seller.product.remove(product.id);
+        seller.save();
+    });
+    // const sellerID = product.seller[0];
+    // console.log(sellerID);
+    // const seller = Seller.findById(sellerID);
+    // console.log(seller);
+    // const index = seller.products.indexOf(req.query.id);
+    // console.log(index)
+    // seller.products.splice(index, 1)
     Product.findByIdAndDelete(req.query.id)
     // .then((product) => {}) for React
     .then((product) => {
