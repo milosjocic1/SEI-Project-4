@@ -32,6 +32,7 @@ const sellersRouter = require("./routes/sellers");
 const transactionRouter = require("./routes/transactions")
 
 
+
 app.use(expressLayouts);
 
 let session = require("express-session");
@@ -68,7 +69,6 @@ app.use("/", cartRouter);
 app.use("/", reviewRouter);
 app.use("/", transactionRouter);
 app.use("/", sellersRouter);
-
 
 app.set("view engine", "ejs");
 
