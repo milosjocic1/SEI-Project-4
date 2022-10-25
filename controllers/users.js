@@ -6,7 +6,7 @@ const {Review} = require("../models/Review")
 
 exports.user_dashboard_get = async (req, res) => {
   
-    let user = await User.findById("63541db8b75e63463d5178b2")
+    let user = await User.findById(req.query.userId)
     .populate("favourite review")
     try {
         res.status(200).json({user})
