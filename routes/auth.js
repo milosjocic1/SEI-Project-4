@@ -21,6 +21,6 @@ router.post('/auth/update', authCntrl.auth_update_post);
 // router.get('/auth/delete', authCntrl.auth_delete_get);
 
 router.get('/auth/update_password', authCntrl.update_password_get);
-router.put('/auth/update_password', authCntrl.update_password_put);
+router.post('/auth/update_password', authCntrl.update_password_post);
 
 module.exports = router;
