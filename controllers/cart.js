@@ -43,7 +43,7 @@ const moment = require('moment');
 // }
 
 exports.addItemToCart = async (req, res) => {
-  let userId = req.params.userId;
+  let userId = req.query.userId;
   let user = await User.exists({ _id: userId });
 
   if (!userId || !isValidObjectId(userId) || !user)
