@@ -1,13 +1,13 @@
-const express = require("express");
+// const express = require("express");
 
-const router = express.Router();
+// const router = express.Router();
 
-router.use(express.json());
+// router.use(express.json());
 
-isLoggedIn = require("../helper/isLoggedIn")
+// isLoggedIn = require("../helper/isLoggedIn")
 
-const sellerCntrl = require("../controllers/sellers");
+// const sellerCntrl = require("../controllers/sellers");
 
-router.get("/seller/dashboard", sellerCntrl.seller_dashboard_get);
+// router.get("/seller/dashboard", sellerCntrl.seller_dashboard_get);
 
-module.exports = router;
+// module.exports = router;
