@@ -2,6 +2,7 @@ const express = require("express");
 
 const router = express.Router();
 
+router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 
 const upload = require("../helper/fileUpload");
@@ -18,5 +19,8 @@ router.get('/auth/logout', authCntrl.auth_logout_get);
 router.get('/auth/update', authCntrl.auth_update_get);
 router.post('/auth/update', authCntrl.auth_update_post);
 // router.get('/auth/delete', authCntrl.auth_delete_get);
+
+router.get('/auth/update_password', authCntrl.update_password_get);
+router.put('/auth/update_password', authCntrl.update_password_put);
 
 module.exports = router;
