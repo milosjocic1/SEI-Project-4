@@ -215,25 +215,30 @@ exports.update_password_get = function  (req, res) {
 
 // __________________________________ UPDATE PASSWORD PUT  __________________________________ //
 
-exports.update_password_put =(req, res) => {
-    let user = User.findById(req.query.userId)
-    if(user.emailAddress){
-        let oldPassword = req.body.oldPassword;
-        let newPassword = req.body.newPassword;
-        let confirmPassword= req.body.confirmPassword;
-        User.findOne({"emailAddress": user.emailAddress}, (err, user) =>{
-        if(user){
-            let hash = user.password;
-            bcrypt.compare(oldPassword, hash, function(err,res){
-                if (res){
-                    if(newPassword == confirmPassword){
-                        bcrypt.hash(newPassword, salt, function(err, hash){
-                        user.password = hash;
-                        user.save()})
-                    }
+exports.update_password_post = async (req, res) => {
+    let user = await User.findById(req.query.userId)
+    try {
+       if(user){
+        let npw = req.body.newPassword;
+        let opw =  req.body.oldPassword;
+        let cpw = req.body.confirmPassword;
+        bcrypt.compare(opw,user.password, function(err,res){
+            if(res){
+                if(npw === cpw){
+                    bcrypt.hash(npw, salt, function(err, hash){
+                    user.password = hash;
+                    user.save()});
+                    res.json({"message":"user password has been updated"})
+                } else {
+                    res.json({"message": "The passpowrds do not match. Please try again."})
                 }
-                })
+            } else {
+                res.json({"message": "Error. This page is blocked by the wall of authentication."})
             }
-        })
-        res.redirect('/')
-}}
+        });
+       } 
+    }
+    catch(error){
+        console.log(error)
+    }
+}    
