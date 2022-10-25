@@ -1,8 +1,6 @@
 const {User} = require("../models/User")
 const {Favourite} = require("../models/Favourite")
 const {Review} = require("../models/Review")
-const jwt = require('jsonwebtoken');
-require("dotenv").config;
 
 // __________________________________ USER DASHBOARD GET  __________________________________ //
 
