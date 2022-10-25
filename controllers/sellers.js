@@ -7,7 +7,7 @@ const {Transaction} = require("../models/Transaction")
 
 exports.seller_dashboard_get = async (req, res) => {
 
-    let user = await User.findById("63541db8b75e63463d5178b2")
+    let user = await User.findById(req.query.userId)
     .populate("favourite", "review") // NEEDS TO BE UPDATED WHEN SIGNIN IS WORKING ON FE
     let seller = ""
     seller = await Seller.find({user: {$in: [user._id]}}).populate("product", "review")
