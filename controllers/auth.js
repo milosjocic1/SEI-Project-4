@@ -1,6 +1,5 @@
 const {User} = require("../models/User")
 const {Seller} = require("../models/Seller")
-
 //Require jsonwebtoken 
 const jwt = require("jsonwebtoken")
 
@@ -37,7 +36,7 @@ exports.auth_signup_post = async (req,res) =>{
             // image = req.file.filename
             const result = await cloudinary.uploader.upload(req.file.path);
 
-            let hash = await bcrypt.hashSync(req.body.password, salt);
+            let hash = bcrypt.hashSync(req.body.password, salt);
             console.log(hash)
 
             let user = new User({
@@ -60,6 +59,7 @@ exports.auth_signup_post = async (req,res) =>{
                     console.log(seller.user[0]._id)
                     seller.save()
                     }
+                    else {console.log("no seller")}
                 })
                 // res.redirect("/")
                 res.json({"message": "User created successfully"})
