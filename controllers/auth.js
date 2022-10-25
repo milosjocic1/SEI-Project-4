@@ -44,6 +44,7 @@ exports.auth_signup_post = async (req,res) =>{
                 lastName: req.body.lastName,
                 emailAddress: req.body.emailAddress,
                 password: req.body.password,
+                userRole: req.body.userRole,
                 // cloudinary_id: result.public_id
             })
             console.log(user.userRole)
