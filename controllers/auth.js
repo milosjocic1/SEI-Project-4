@@ -34,8 +34,8 @@ exports.auth_signup_post = async (req,res) =>{
         if(!match) {
         
             // image = req.file.filename
-            // const result = await cloudinary.uploader.upload(req.file.path);
-
+            const result = await cloudinary.uploader.upload(req.file.path);
+            console.log(result)
             let hash = bcrypt.hashSync(req.body.password, salt);
             console.log(hash)
 
@@ -45,7 +45,7 @@ exports.auth_signup_post = async (req,res) =>{
                 emailAddress: req.body.emailAddress,
                 password: req.body.password,
                 userRole: req.body.userRole,
-                // cloudinary_id: result.public_id
+                cloudinary_url: result.url
             })
             console.log(user.userRole)
             user.password = hash;
@@ -154,7 +154,7 @@ exports.auth_logout_get = (req, res) => {
 // __________________________________ AUTH UPDATE GET __________________________________ // 
 
 exports.auth_update_get = async (req, res) => {
-    let user = await User.findById("63541db8b75e63463d5178b2") // NEEDS TO BE UPDATED WHEN SIGNIN IS WORKING ON FE
+    let user = await User.findById(req.query.userId)// NEEDS TO BE UPDATED WHEN SIGNIN IS WORKING ON FE
     let seller = ""
     try{
         if(user.userRole === "seller"){
@@ -173,7 +173,7 @@ exports.auth_update_get = async (req, res) => {
 // __________________________________ AUTH UPDATE POST __________________________________ //
 
 exports.auth_update_post = async (req, res) => {
-    let user = await User.findById("63541db8b75e63463d5178b2") // NEEDS TO BE UPDATED WHEN SIGNIN IS WORKING ON FE
+    let user = await User.findById(req.query.userId) // NEEDS TO BE UPDATED WHEN SIGNIN IS WORKING ON FE
     let seller = ""
     try{
         console.log(req.body)
@@ -198,8 +198,47 @@ exports.auth_update_post = async (req, res) => {
     }
 }
 
-// // __________________________________ AUTH DELETE GET __________________________________ //
+// __________________________________ AUTH DELETE GET __________________________________ //
 
 // exports.auth_delete_get = (req, res) => {
 //     //
 // }
+
+//
+
+// __________________________________ UPDATE PASSWORD GET  __________________________________ //
+
+
+exports.update_password_get = function  (req, res) {
+    res.render('auth/updatepassword')
+}
+
+// __________________________________ UPDATE PASSWORD PUT  __________________________________ //
+
+exports.update_password_post = async (req, res) => {
+    let user = await User.findById(req.query.userId)
+    try {
+       if(user){
+        let npw = req.body.newPassword;
+        let opw =  req.body.oldPassword;
+        let cpw = req.body.confirmPassword;
+        bcrypt.compare(opw,user.password, function(err,res){
+            if(res){
+                if(npw === cpw){
+                    bcrypt.hash(npw, salt, function(err, hash){
+                    user.password = hash;
+                    user.save()});
+                    res.json({"message":"user password has been updated"})
+                } else {
+                    res.json({"message": "The passpowrds do not match. Please try again."})
+                }
+            } else {
+                res.json({"message": "Error. This page is blocked by the wall of authentication."})
+            }
+        });
+       } 
+    }
+    catch(error){
+        console.log(error)
+    }
+}    
