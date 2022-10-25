@@ -21,15 +21,22 @@ exports.product_create_post = (req, res) => {
   console.log(req.body);
   // res.send("POST WORKS")
   // Saving the data into the database
+
   let product = new Product(req.body);
   product
-    .save()
     .then(() => {
       // req.body.seller.forEach(seller => {
-      let seller = product.seller;
+      let seller = req.query.id;
       Seller.findById(seller, (error, seller) => {
         seller.product.push(product.id);
-        seller.save();
+        seller.save()
+        .then(() => {
+          Product.findById(product.id)
+          .then(() => {
+            product.seller.push(seller.id);
+            product.save();
+          })
+        })
       });
       // });
       // res.redirect('/product/index');
