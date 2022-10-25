@@ -31,8 +31,6 @@ const reviewRouter = require("./routes/reviews");
 const sellersRouter = require("./routes/sellers");
 const transactionRouter = require("./routes/transactions")
 
-
-
 app.use(expressLayouts);
 
 let session = require("express-session");
@@ -71,8 +69,6 @@ app.use("/", transactionRouter);
 app.use("/", sellersRouter);
 
 app.set("view engine", "ejs");
-
-
 
 // Database Connection
 mongoose.connect(process.env.DATABASE_URL,
