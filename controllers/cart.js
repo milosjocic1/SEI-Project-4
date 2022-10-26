@@ -2,6 +2,7 @@ const {Cart} = require("../models/Cart");
 const {User} = require("../models/User");
 const {Product} = require("../models/Product");
 const { isValidObjectId } = require("mongoose");
+var ObjectID = require('mongodb').ObjectId;
 
 const moment = require('moment');
 
@@ -49,34 +50,58 @@ exports.addItemToCart = async (req, res) => {
   if (!userId || !isValidObjectId(userId) || !user)
     return res.status(400).send({ status: false, message: "Invalid user ID" });
 
-  let productId = req.body.productId;
-  if (!productId)
+  let product = Product.findById(req.body.productId);
+  
+
+  if (!product)
     return res.status(400).send({ status: false, message: "Invalid product" });
 
-  let cart = await Cart.findOne({ userId: userId });
+  else {
+    product = Product.findById(req.body.productId)
+    .then( async (product) => {
+      let cart = await Cart.findOne({userId: userId});
 
-  if (cart) {
-    let itemIndex = cart.products.findIndex((p) => p.productId == productId);
-
-    if (itemIndex > -1) {
-      let productItem = cart.products[itemIndex];
-      productItem.quantity += 1;
-      cart.products[itemIndex] = productItem;
-    } else {
-      cart.products.push({ productId: productId, quantity: 1 });
-    }
-  
-    cart = await cart.save();
-    return res.status(200).send({ status: true, updatedCart: cart });
-  } else {
-    const newCart = await Cart.create({
-      userId,
-      products: [{ productId: productId, quantity: 1 }],
-    });
-
-    return res.status(201).send({ status: true, newCart: newCart });
+        if (cart) {
+            let i = cart.products.findIndex((p) => p.productId == product);
+            console.log("index is " + i)
+        
+            if (i > -1) {
+              let productItem = cart.products[i];
+              productItem.quantity += 1;
+              cart.products[i] = productItem;
+            } else {
+          cart.products.push({ productId: product, quantity: 1 });  
+          cart.save();   
+          console.log(cart)
+          return res.status(200).send({ status: true, updatedCart: cart });
+        }
+        } 
+        else {
+          const newCart = Cart.create({
+            userId,
+            products: [{ productId: product, quantity: 1 }],
+          });
+      
+          return res.status(201).send({ status: true, newCart: newCart });
+        }
+    }) 
+    .catch((err) => {
+      console.log(err)
+    })
   }
+
 }
+      
+
+
+
+
+
+
+
+
+
+
 
 
 // // Won't need to be used in React
@@ -120,21 +145,23 @@ exports.addItemToCart = async (req, res) => {
 // }
 
 
+
 exports.getCart = async (req, res) => {
-    let userId = req.query.userId;
-    let user = await User.exists({ _id: userId });
-  
-    if (!userId || !isValidObjectId(userId) || !user)
-      return res.status(400).send({ status: false, message: "Invalid user ID" });
-  
-    let cart = await Cart.findOne({ userId: userId });
-    if (!cart)
-      return res
-        .status(404)
-        .send({ status: false, message: "Cart not found for this user" });
-  
-    res.status(200).send({ status: true, cart: cart });
-  };
+  let userId = req.query.userId;
+  let user = await User.exists({ _id: userId });
+
+  if (!userId || !isValidObjectId(userId) || !user)
+    return res.status(400).send({ status: false, message: "Invalid user ID" });
+
+  let cart = await Cart.findOne({ userId: userId });
+  if (!cart)
+    return res
+      .status(404)
+      .send({ status: false, message: "Cart not found for this user" });
+
+  res.status(200).send({ status: true, cart: cart });
+};
+
 
 // exports.decreaseQuantity = async (req, res) => {
 //   // use add product endpoint for increase quantity
