@@ -19,10 +19,12 @@ exports.product_create_get = (req, res) => {
 
 exports.product_create_post = (req, res) => {
   console.log(req.body);
+  console.log(req.query.id)
   // res.send("POST WORKS")
   // Saving the data into the database
   let product = new Product(req.body);
-  product.seller.push(req.query.id)
+  product.seller.push(req.query.id);
+  
   product
     .save()
     .then(() => {
@@ -30,7 +32,7 @@ exports.product_create_post = (req, res) => {
       let seller = product.seller;
       Seller.findById(seller, (error, seller) => {
         seller.product.push(product.id);
-        seller.save()
+        seller.save();
       });
       // });
       // res.redirect('/product/index');
@@ -80,6 +82,7 @@ exports.product_delete_get = (req, res) => {
       console.log(product);
       Seller.findById(product.seller, (error, seller) => {
         console.log(seller);
+        console.log(product.seller)
         seller.product.remove(req.query.id);
         seller.save();
         Product.findByIdAndDelete(req.query.id)
