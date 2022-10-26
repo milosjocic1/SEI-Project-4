@@ -43,7 +43,7 @@ const productSchema = mongoose.Schema({
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'Favourite'
     // }],
-    transactionID: String
+    // transactionID: String
 }, { timestamps: true })
 
 const Product = mongoose.model("Product", productSchema);
