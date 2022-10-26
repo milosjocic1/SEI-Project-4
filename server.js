@@ -68,22 +68,16 @@ app.use("/", transactionRouter);
 
 app.set("view engine", "ejs");
 
-
-// Database Connection
-mongoose.connect(process.env.DATABASE_URL,
-  { useNewURLParser: true, useUnifiedTopology: true},
-  () => {
-      console.log('MongoDB connected!')
-  }
-);
-
 // Cloudinary test - can remove and put in other files later
 const { cloudinary } = require('./utils/cloudinary');
+const cors = require("cors");
 
+// const bodyParser = require('body-parser')
 
 app.use(express.json({limit: '50mb'}));
 app.use(express.urlencoded({limit: '50mb', extended: true}));
-
+// replace bodyParser with express
+app.use(cors());
 
 // app.get('/api/images', async (req, res) => {
 //   const {resources} = await cloudinary.search.expression('folder:bnjbdd6e')
@@ -111,3 +105,13 @@ app.listen(PORT, () => {
   console.log(PORT)
     console.log(`Agora is running on port ${PORT}`);
   });
+
+
+// Database Connection
+mongoose.connect(process.env.DATABASE_URL,
+  { useNewURLParser: true, useUnifiedTopology: true},
+  () => {
+      console.log('MongoDB connected!')
+  }
+);
+
