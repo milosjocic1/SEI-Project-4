@@ -19,10 +19,12 @@ exports.product_create_get = (req, res) => {
 
 exports.product_create_post = (req, res) => {
   console.log(req.body);
+  console.log(req.query.id)
   // res.send("POST WORKS")
   // Saving the data into the database
   let product = new Product(req.body);
   product.seller.push(req.query.id);
+  
   product
     .save()
     .then(() => {
