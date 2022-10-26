@@ -34,8 +34,8 @@ exports.auth_signup_post = async (req,res) =>{
         if(!match) {
         
             // image = req.file.filename
-            const result = await cloudinary.uploader.upload(req.file.path);
-            console.log(result)
+            // const result = await cloudinary.uploader.upload(req.file.path);
+            // console.log(result)
             let hash = bcrypt.hashSync(req.body.password, salt);
             console.log(hash)
 
@@ -45,7 +45,7 @@ exports.auth_signup_post = async (req,res) =>{
                 emailAddress: req.body.emailAddress,
                 password: req.body.password,
                 userRole: req.body.userRole,
-                cloudinary_url: result.url
+                // cloudinary_url: result.url
             })
             console.log(user.userRole)
             user.password = hash;

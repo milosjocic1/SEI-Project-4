@@ -9,7 +9,7 @@ const upload = require("../helper/fileUpload");
 const authCntrl = require("../controllers/auth");
 
 router.get("/auth/signup", authCntrl.auth_signup_get); // not used
-router.post("/auth/signup", upload.single('image'),authCntrl.auth_signup_post);
+router.post("/auth/signup", /*upload.single('image'),*/authCntrl.auth_signup_post);
 
 router.get("/auth/signin", authCntrl.auth_signin_get);
 router.post("/auth/signin", authCntrl.auth_signin_post);
