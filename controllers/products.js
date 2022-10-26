@@ -22,6 +22,7 @@ exports.product_create_post = (req, res) => {
   // res.send("POST WORKS")
   // Saving the data into the database
   let product = new Product(req.body);
+  product.seller.push(req.query.id)
   product
     .save()
     .then(() => {
@@ -29,7 +30,7 @@ exports.product_create_post = (req, res) => {
       let seller = product.seller;
       Seller.findById(seller, (error, seller) => {
         seller.product.push(product.id);
-        seller.save();
+        seller.save()
       });
       // });
       // res.redirect('/product/index');
