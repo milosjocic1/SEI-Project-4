@@ -1,4 +1,4 @@
-const express = require("express");
+const express = require('express');
 
 require("dotenv").config();
 
@@ -68,6 +68,7 @@ app.use("/", transactionRouter);
 
 app.set("view engine", "ejs");
 
+
 // Database Connection
 mongoose.connect(process.env.DATABASE_URL,
   { useNewURLParser: true, useUnifiedTopology: true},
@@ -75,6 +76,36 @@ mongoose.connect(process.env.DATABASE_URL,
       console.log('MongoDB connected!')
   }
 );
+
+// Cloudinary test - can remove and put in other files later
+const { cloudinary } = require('./utils/cloudinary');
+
+
+app.use(express.json({limit: '50mb'}));
+app.use(express.urlencoded({limit: '50mb', extended: true}));
+
+
+// app.get('/api/images', async (req, res) => {
+//   const {resources} = await cloudinary.search.expression('folder:bnjbdd6e')
+//   .sort_by('public_id', 'desc')
+//   .max_results(30)
+//   .execute();
+//   const publicIds = resources.map( file => file.public_id);
+//   res.send('publicIds')
+// })
+app.post('/api/upload', async (req, res) => {
+    try {
+      const fileStr = req.body.data;
+      const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+        upload_preset: 'agora_images'
+      })
+      console.log(uploadedResponse)
+      res.json({msg: "Wooo"})
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({err: "not working"}) 
+    }
+  })
 
 app.listen(PORT, () => {
   console.log(PORT)

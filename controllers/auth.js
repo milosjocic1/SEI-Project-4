@@ -34,7 +34,7 @@ exports.auth_signup_post = async (req,res) =>{
         if(!match) {
         
             // image = req.file.filename
-            // const result = await cloudinary.uploader.upload(req.file.path);
+            // const result = await cloudinary.uploader.upload(req.file.path);  
             // console.log(result)
             let hash = bcrypt.hashSync(req.body.password, salt);
             console.log(hash)
