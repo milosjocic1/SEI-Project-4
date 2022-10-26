@@ -23,8 +23,8 @@ exports.product_create_post = (req, res) => {
   // res.send("POST WORKS")
   // Saving the data into the database
   let product = new Product(req.body);
+
   product.seller.push(req.query.id);
-  
   product
     .save()
     .then(() => {
@@ -82,6 +82,7 @@ exports.product_delete_get = (req, res) => {
       console.log(product);
       Seller.findById(product.seller, (error, seller) => {
         console.log(seller);
+        console.log(product.seller)
         seller.product.remove(req.query.id);
         seller.save();
         Product.findByIdAndDelete(req.query.id)
