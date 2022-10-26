@@ -9,13 +9,9 @@ const upload = require("../helper/fileUpload");
 const authCntrl = require("../controllers/auth");
 
 router.get("/auth/signup", authCntrl.auth_signup_get); // not used
-<<<<<<< HEAD
-router.post("/auth/signup", /*upload.single('image'),*/authCntrl.auth_signup_post);
-=======
 // router.post("/auth/signup", upload.single('image'),authCntrl.auth_signup_post);
 router.post("/auth/signup", authCntrl.auth_signup_post);
 
->>>>>>> 8999b449a71a5b55c701465e93eb1f077491b766
 
 router.get("/auth/signin", authCntrl.auth_signin_get);
 router.post("/auth/signin", authCntrl.auth_signin_post);
