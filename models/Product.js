@@ -30,7 +30,11 @@ const productSchema = mongoose.Schema({
         required: true
     },
     images: [],
-    shippingRate: Number,
+    shippingRate: {
+        type: Number,
+        required: true
+    },
+    cloudinary_url: String,
     returnsPolicy: {
         type: String,
         required: true
