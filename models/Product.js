@@ -23,13 +23,13 @@ const productSchema = mongoose.Schema({
     },
     category: {
         type: String,
-        required: true
+        // required: true
     },
     subCategory: {
         type: String,
-        required: true
+        // required: true
     },
-    images: [],
+    cloudinary_url: String,
     shippingRate: String,
     returnsPolicy: {
         type: String,
