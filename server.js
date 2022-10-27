@@ -11,13 +11,15 @@ console.log(stripePublicKey,stripeSecretKey)
 
 const mongoose = require("mongoose");
 
+const path = require('path')
+
 const PORT = process.env.PORT
 
 const app = express();
 
 app.use(flash());
 
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, 'build')));
 
 const expressLayouts = require("express-ejs-layouts");
 
@@ -106,6 +108,9 @@ app.listen(PORT, () => {
     console.log(`Agora is running on port ${PORT}`);
   });
 
+app.get("/*", function(req, res){
+  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+});
 
 // Database Connection
 mongoose.connect(process.env.DATABASE_URL,
