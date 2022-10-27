@@ -73,6 +73,7 @@ app.set("view engine", "ejs");
 // Cloudinary test - can remove and put in other files later
 const { cloudinary } = require('./utils/cloudinary');
 const cors = require("cors");
+const { User } = require('./models/User');
 
 // const bodyParser = require('body-parser')
 
@@ -95,8 +96,17 @@ app.post('/api/upload', async (req, res) => {
       const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
         upload_preset: 'agora_images'
       })
-      console.log(uploadedResponse)
-      res.json({msg: "Wooo"})
+      console.log(uploadedResponse.url)
+      User.findById(req.query.userId)
+      .then((user) => {
+        user.cloudinary_url = uploadedResponse.url
+        user.save()
+        res.json({msg: "Wooo"})
+      }
+      )
+      .catch(error => {
+        console.log(error)
+      })
     } catch (error) {
       console.log(error)
       res.status(500).json({err: "not working"}) 

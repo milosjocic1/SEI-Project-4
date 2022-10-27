@@ -51,7 +51,7 @@ exports.auth_signup_post = async (req,res) =>{
             user.password = hash;
 
             user.save()
-            .then(() => {
+            .then((createdUser) => {
                 User.findById(user)
                 .then((user) =>{ 
                     if(user.userRole === "seller"){
@@ -63,7 +63,7 @@ exports.auth_signup_post = async (req,res) =>{
                     else {console.log("no seller")}
                 })
                 // res.redirect("/")
-                res.json({"message": "User created successfully"})
+                res.json({"message": "User created successfully", user: createdUser})
             })
             .catch((err)=> {
                 console.log(err);
