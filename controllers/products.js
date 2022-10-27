@@ -25,7 +25,6 @@ exports.product_create_post = (req, res) => {
   let product = new Product(req.body);
 
   product.seller.push(req.query.id);
-
   product
     .save()
     .then(() => {

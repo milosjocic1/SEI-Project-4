@@ -72,6 +72,7 @@ app.set("view engine", "ejs");
 const { cloudinary } = require('./utils/cloudinary');
 const cors = require("cors");
 const { User } = require('./models/User');
+const { default: Product } = require('../Agora-Frontend/src/product/Product');
 
 // const bodyParser = require('body-parser')
 
@@ -80,14 +81,14 @@ app.use(express.urlencoded({limit: '50mb', extended: true}));
 // replace bodyParser with express
 app.use(cors());
 
-// app.get('/api/images', async (req, res) => {
-//   const {resources} = await cloudinary.search.expression('folder:bnjbdd6e')
-//   .sort_by('public_id', 'desc')
-//   .max_results(30)
-//   .execute();
-//   const publicIds = resources.map( file => file.public_id);
-//   res.send('publicIds')
-// })
+app.get('/api/images', async (req, res) => {
+  const {resources} = await cloudinary.search.expression('folder:bnjbdd6e')
+  .sort_by('public_id', 'desc')
+  .max_results(30)
+  .execute();
+  const publicIds = resources.map( file => file.public_id);
+  res.send('publicIds')
+})
 app.post('/api/upload', async (req, res) => {
     try {
       const fileStr = req.body.data;
@@ -110,6 +111,8 @@ app.post('/api/upload', async (req, res) => {
       res.status(500).json({err: "not working"}) 
     }
   })
+
+
 
 app.listen(PORT, () => {
   console.log(PORT)
