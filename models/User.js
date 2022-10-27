@@ -30,7 +30,7 @@ const userSchema = mongoose.Schema({
         required: true,
     },
     profilePhoto: String,
-    cloudinary_id: String,
+    cloudinary_url: String,
     shippingAddress: {
         addressLine1: {
             type: String,

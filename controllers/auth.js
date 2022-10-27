@@ -45,7 +45,7 @@ exports.auth_signup_post = async (req,res) =>{
                 emailAddress: req.body.emailAddress,
                 password: req.body.password,
                 userRole: req.body.userRole,
-                // cloudinary_url: result.url
+                cloudinary_url: req.body.data
             })
             console.log(user.userRole)
             user.password = hash;
