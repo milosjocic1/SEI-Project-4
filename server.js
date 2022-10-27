@@ -72,7 +72,6 @@ app.set("view engine", "ejs");
 const { cloudinary } = require('./utils/cloudinary');
 const cors = require("cors");
 const { User } = require('./models/User');
-const { Product } = require('./models/Product');
 
 // const bodyParser = require('body-parser')
 
