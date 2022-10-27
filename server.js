@@ -71,6 +71,8 @@ app.set("view engine", "ejs");
 // Cloudinary test - can remove and put in other files later
 const { cloudinary } = require('./utils/cloudinary');
 const cors = require("cors");
+const { User } = require('./models/User');
+const { Product } = require('./models/Product');
 
 // const bodyParser = require('body-parser')
 
@@ -79,27 +81,83 @@ app.use(express.urlencoded({limit: '50mb', extended: true}));
 // replace bodyParser with express
 app.use(cors());
 
-// app.get('/api/images', async (req, res) => {
-//   const {resources} = await cloudinary.search.expression('folder:bnjbdd6e')
-//   .sort_by('public_id', 'desc')
-//   .max_results(30)
-//   .execute();
-//   const publicIds = resources.map( file => file.public_id);
-//   res.send('publicIds')
-// })
+app.get('/api/images', async (req, res) => {
+  const {resources} = await cloudinary.search.expression('folder:bnjbdd6e')
+  .sort_by('public_id', 'desc')
+  .max_results(30)
+  .execute();
+  const publicIds = resources.map( file => file.public_id);
+  res.send('publicIds')
+})
 app.post('/api/upload', async (req, res) => {
     try {
       const fileStr = req.body.data;
       const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
         upload_preset: 'agora_images'
       })
-      console.log(uploadedResponse)
-      res.json({msg: "Wooo"})
+      console.log(uploadedResponse.url)
+      User.findById(req.query.userId)
+      .then((user) => {
+        user.cloudinary_url = uploadedResponse.url
+        user.save()
+        res.json({msg: "Wooo"})
+      }
+      )
+      .catch(error => {
+        console.log(error)
+      })
     } catch (error) {
       console.log(error)
       res.status(500).json({err: "not working"}) 
     }
   })
+
+  // ATTEMPT API TO GET PRODUCT IMAGES
+  // app.post("/api/uploadProduct", async (req, res) => {
+  //   try {
+  //     const fileStr = req.body.data;
+  //     const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+  //       upload_preset: "agora_images",
+  //     });
+  //     console.log(uploadedResponse.url);
+  //     Product.findById(req.query.productId)
+  //       .then((product) => {
+  //         product.cloudinary_url = uploadedResponse.url;
+  //         product.save();
+  //         res.json({ msg: "yay" });
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).json({ err: "not working" });
+  //   }
+  // });
+  app.post("/api/uploadProduct", async (req, res) => {
+    try {
+      const fileStr = req.body.data;
+      const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+        upload_preset: "agora_images",
+      });
+      console.log(uploadedResponse.url);
+      Product.findById(req.query.productId)
+        .then((product) => {
+          product.cloudinary_url = uploadedResponse.url;
+          product.save();
+          res.json({ msg: "yay" });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ err: "not working" });
+    }
+  });
+
+
+
 
 app.listen(PORT, () => {
   console.log(PORT)

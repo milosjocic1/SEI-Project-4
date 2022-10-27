@@ -155,16 +155,25 @@ exports.getCart = async (req, res) => {
   let cart = await Cart.findOne({ userId: userId })
     .populate("products.productId")
     .then((cart) => {
-      return cart;
+      return cart
   })
-  
+
   try {
     if (!cart){
       return res
       .status(404)
       .send({ status: false, message: "Cart not found for this user" });
     } 
-    res.status(200).json({cart});
+    else{
+      let total = 0;
+      cart.products.map((product) => {
+        total += ((product.quantity * product.productId.price) + product.productId.shippingRate)
+        return total
+      })
+      cart.total = total;
+      res.status(200).json({cart});
+    }
+
   } catch (error) {
     console.log(error);
   }
@@ -226,5 +235,39 @@ exports.removeItem = async (req, res) => {
 };
 
 
+exports.shippingAndBilling = async (req, res) => {
+  let userId = req.params.userId.trim();
+  let user = await User.findById(userId);
 
-
+  let shipping = await user.shippingAddress.addressLine1
+  console.log("shipping is " + shipping)
+  try{
+    let shippingParams = {
+      "shippingAddress.addressLine1": req.body.addressLine1S,
+      "shippingAddress.addressLine2": req.params.addressLine2S,
+      "shippingAddress.city": req.body.cityS,
+      "shippingAddress.country": req.body.countyS,
+      "shippingAddress.postCode": req.body.postCodeS
+    }      
+    User.findOneAndUpdate({_id: userId}, shippingParams);
+  }
+  catch(error){
+    console.log(error)
+  } 
+  
+  let billing = await user.billingAddress.addressLine1  
+  console.log("billing is " + billing)
+  try{
+    let billingParams = {
+      "billingAddress.addressLine1": req.body.addressLine1B,
+      "billingAddress.addressLine2": req.params.addressLine2B,
+      "billingAddress.city": req.body.cityB,
+      "billingAddress.country": req.body.countyB,
+      "billingAddress.postCode": req.body.postCodeB
+    }      
+    User.findOneAndUpdate({_id: userId}, billingParams);
+  }
+  catch(error){
+    console.log(error)
+  } 
+}  
