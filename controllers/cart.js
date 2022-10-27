@@ -147,19 +147,37 @@ exports.addItemToCart = async (req, res) => {
 
 
 exports.getCart = async (req, res) => {
-  let userId = req.query.userId;
-  let user = await User.exists({ _id: userId });
+  let userId = req.query.userId.trim();
+  let user = await User.findById(userId);
 
   if (!userId || !isValidObjectId(userId) || !user)
     return res.status(400).send({ status: false, message: "Invalid user ID" });
 
-  let cart = await Cart.findOne({ userId: userId });
-  if (!cart)
-    return res
+  let cart = await Cart.findOne({ userId: userId })
+    .populate("products.productId")
+    .then((cart) => {
+      return cart
+  })
+  
+  try {
+    if (!cart){
+      return res
       .status(404)
       .send({ status: false, message: "Cart not found for this user" });
+    } 
+    else{
+      let total = 0;
+      cart.products.map((product) => {
+        total += ((product.quantity * product.productId.price) + product.productId.shippingRate)
+        return total
+      })
+      cart.total = total;
+      res.status(200).json({cart});
+    }
 
-  res.status(200).send({ status: true, cart: cart });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 

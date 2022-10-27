@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.use(methodOverride('_method'));
 
-router.use(express.urlencoded({ extended: true })); // EE unhashing for testing
+//router.use(express.urlencoded({ extended: true }));
 router.use(express.json());
 const cartCtrl = require("../controllers/cart");
 

@@ -18,7 +18,7 @@ const productSchema = mongoose.Schema({
         required: true
     },
     price: {
-        type: String,
+        type: Number,
         required: true
     },
     category: {
@@ -29,8 +29,12 @@ const productSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    images: [],
+    shippingRate: {
+        type: Number,
+        required: true
+    },
     cloudinary_url: String,
-    shippingRate: String,
     returnsPolicy: {
         type: String,
         required: true
