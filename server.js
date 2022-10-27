@@ -73,7 +73,6 @@ const { cloudinary } = require('./utils/cloudinary');
 const cors = require("cors");
 const { User } = require('./models/User');
 
-
 // const bodyParser = require('body-parser')
 
 app.use(express.json({limit: '50mb'}));
@@ -111,6 +110,52 @@ app.post('/api/upload', async (req, res) => {
       res.status(500).json({err: "not working"}) 
     }
   })
+
+  // ATTEMPT API TO GET PRODUCT IMAGES
+  // app.post("/api/uploadProduct", async (req, res) => {
+  //   try {
+  //     const fileStr = req.body.data;
+  //     const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+  //       upload_preset: "agora_images",
+  //     });
+  //     console.log(uploadedResponse.url);
+  //     Product.findById(req.query.productId)
+  //       .then((product) => {
+  //         product.cloudinary_url = uploadedResponse.url;
+  //         product.save();
+  //         res.json({ msg: "yay" });
+  //       })
+  //       .catch((error) => {
+  //         console.log(error);
+  //       });
+  //   } catch (error) {
+  //     console.log(error);
+  //     res.status(500).json({ err: "not working" });
+  //   }
+  // });
+  app.post("/api/uploadProduct", async (req, res) => {
+    try {
+      const fileStr = req.body.data;
+      const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+        upload_preset: "agora_images",
+      });
+      console.log(uploadedResponse.url);
+      Product.findById(req.query.productId)
+        console.log(req.query.productId)
+        .then((product) => {
+          product.cloudinary_url = uploadedResponse.url;
+          product.save();
+          res.json({ msg: "yay" });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ err: "not working" });
+    }
+  });
+
 
 
 

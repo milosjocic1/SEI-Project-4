@@ -29,11 +29,6 @@ const productSchema = mongoose.Schema({
         type: String,
         // required: true
     },
-
-  
-    
-
-
     shippingRate: {
         type: Number,
         required: true
