@@ -72,7 +72,7 @@ app.set("view engine", "ejs");
 const { cloudinary } = require('./utils/cloudinary');
 const cors = require("cors");
 const { User } = require('./models/User');
-const { default: Product } = require('../Agora-Frontend/src/product/Product');
+
 
 // const bodyParser = require('body-parser')
 
