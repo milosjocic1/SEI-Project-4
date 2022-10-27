@@ -158,7 +158,7 @@ exports.getCart = async (req, res) => {
     .then((cart) => {
       return cart
   })
-  
+
   try {
     if (!cart){
       return res
@@ -234,3 +234,41 @@ exports.removeItem = async (req, res) => {
     .status(400)
     .send({ status: false, message: "Item does not exist in cart" });
 };
+
+
+exports.shippingAndBilling = async (req, res) => {
+  let userId = req.params.userId.trim();
+  let user = await User.findById(userId);
+
+  let shipping = await user.shippingAddress.addressLine1
+  console.log("shipping is " + shipping)
+  try{
+    let shippingParams = {
+      "shippingAddress.addressLine1": req.body.addressLine1S,
+      "shippingAddress.addressLine2": req.params.addressLine2S,
+      "shippingAddress.city": req.body.cityS,
+      "shippingAddress.country": req.body.countyS,
+      "shippingAddress.postCode": req.body.postCodeS
+    }      
+    User.findOneAndUpdate({_id: userId}, shippingParams);
+  }
+  catch(error){
+    console.log(error)
+  } 
+  
+  let billing = await user.billingAddress.addressLine1  
+  console.log("billing is " + billing)
+  try{
+    let billingParams = {
+      "billingAddress.addressLine1": req.body.addressLine1B,
+      "billingAddress.addressLine2": req.params.addressLine2B,
+      "billingAddress.city": req.body.cityB,
+      "billingAddress.country": req.body.countyB,
+      "billingAddress.postCode": req.body.postCodeB
+    }      
+    User.findOneAndUpdate({_id: userId}, billingParams);
+  }
+  catch(error){
+    console.log(error)
+  } 
+}  
