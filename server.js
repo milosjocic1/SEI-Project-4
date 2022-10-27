@@ -72,6 +72,7 @@ app.set("view engine", "ejs");
 const { cloudinary } = require('./utils/cloudinary');
 const cors = require("cors");
 const { User } = require('./models/User');
+const { Product } = require('./models/Product');
 
 // const bodyParser = require('body-parser')
 
@@ -141,7 +142,6 @@ app.post('/api/upload', async (req, res) => {
       });
       console.log(uploadedResponse.url);
       Product.findById(req.query.productId)
-        console.log(req.query.productId)
         .then((product) => {
           product.cloudinary_url = uploadedResponse.url;
           product.save();
