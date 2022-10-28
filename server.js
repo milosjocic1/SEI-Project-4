@@ -154,6 +154,26 @@ app.post('/api/upload', async (req, res) => {
     }
   });
 
+  app.get("/search", async (req, res, next) => {
+    try {
+      const { q } = req.query;
+      const products = await Product.find({
+        title: { $regex: q, $options: "i" },
+      });
+
+      if (products.length < 1) throw new ErrorHandler(404, "No product found");
+
+      res.status(201).json({
+        status: "success",
+        message: "Product has been found successfully",
+        products,
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
+
   app.post("/stripe/charge", cors(), async (req, res) => {
     console.log("stripe-routes.js 9 | route reached", req.body);
     let { amount, id } = req.body;
