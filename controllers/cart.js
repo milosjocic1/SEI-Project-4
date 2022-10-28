@@ -46,18 +46,17 @@ const moment = require('moment');
 exports.addItemToCart = async (req, res) => {
   let userId = req.query.userId;
   let user = await User.exists({ _id: userId });
-
   if (!userId || !isValidObjectId(userId) || !user)
     return res.status(400).send({ status: false, message: "Invalid user ID" });
 
-  let product = Product.findById(req.body.productId);
+  let product = Product.findById(req.query.productId);
   
 
   if (!product)
     return res.status(400).send({ status: false, message: "Invalid product" });
 
   else {
-    product = Product.findById(req.body.productId)
+    product = Product.findById(req.query.productId)
     .then( async (product) => {
       let cart = await Cart.findOne({userId: userId});
 

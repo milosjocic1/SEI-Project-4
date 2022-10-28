@@ -26,7 +26,7 @@ const usersRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const cartRouter = require("./routes/cart");
 const reviewRouter = require("./routes/reviews");
-// const transactionRouter = require("./routes/transactions")
+const searchRouter = require("./routes/search")
 
 app.use(expressLayouts);
 
@@ -62,7 +62,7 @@ app.use("/", usersRouter);
 app.use("/", productRouter);
 app.use("/", cartRouter);
 app.use("/", reviewRouter);
-// app.use("/", transactionRouter);
+app.use("/", searchRouter);
 
 app.set("view engine", "ejs");
 
@@ -70,6 +70,7 @@ app.set("view engine", "ejs");
 const { cloudinary } = require('./utils/cloudinary');
 const cors = require("cors");
 const { User } = require('./models/User');
+const { Product } = require('./models/Product');
 
 // const bodyParser = require('body-parser')
 
@@ -139,7 +140,6 @@ app.post('/api/upload', async (req, res) => {
       });
       console.log(uploadedResponse.url);
       Product.findById(req.query.productId)
-        console.log(req.query.productId)
         .then((product) => {
           product.cloudinary_url = uploadedResponse.url;
           product.save();
@@ -153,6 +153,26 @@ app.post('/api/upload', async (req, res) => {
       res.status(500).json({ err: "not working" });
     }
   });
+
+  app.get("/search", async (req, res, next) => {
+    try {
+      const { q } = req.query;
+      const products = await Product.find({
+        title: { $regex: q, $options: "i" },
+      });
+
+      if (products.length < 1) throw new ErrorHandler(404, "No product found");
+
+      res.status(201).json({
+        status: "success",
+        message: "Product has been found successfully",
+        products,
+      });
+    } catch (error) {
+      next(error);
+    }
+  });
+
 
   app.post("/stripe/charge", cors(), async (req, res) => {
     console.log("stripe-routes.js 9 | route reached", req.body);
