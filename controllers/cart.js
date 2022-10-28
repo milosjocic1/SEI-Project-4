@@ -167,6 +167,7 @@ exports.getCart = async (req, res) => {
     else{
       let total = 0;
       cart.products.map((product) => {
+        console.log(product)
         total += ((product.quantity * product.productId.price) + product.productId.shippingRate)
         return total
       })
