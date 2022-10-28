@@ -147,14 +147,3 @@ exports.product_update_put = (req, res) => {
 };
 
 
-// exports.product_search_post = (req, res) => {
-//   let product = new Product(req.body);
-
-//   Product.find({ title: { $regex: product.title } })
-//     .then((products) => {
-//       res.render("product/index", { products });
-//     })
-//     .catch((err) => {
-//       console.log(err);
-//     });
-// };
