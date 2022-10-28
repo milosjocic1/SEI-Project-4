@@ -238,36 +238,27 @@ exports.removeItem = async (req, res) => {
 
 
 exports.shippingAndBilling = async (req, res) => {
-  let userId = req.params.userId.trim();
+  console.log("hi")
+  let userId = req.query.userId;
   let user = await User.findById(userId);
+  console.log("hi")
+  try{
+    User.findOneAndUpdate({_id: user._id},
+      {
+        $set: {
+          "shippingAddress.addressLine1": req.body.addressLine1S,
+          "shippingAddress.addressLine2": req.body.addressLine2S,
+          "shippingAddress.city": req.body.cityS,
+          "shippingAddress.country": req.body.countyS,
+          "shippingAddress.postCode": req.body.postCodeS,
+          "billingAddress.addressLine1": req.body.addressLine1B,
+          "billingAddress.addressLine2": req.body.addressLine2B,
+          "billingAddress.city": req.body.cityB,
+          "billingAddress.country": req.body.countyB,
+          "billingAddress.postCode": req.body.postCodeB         
+        }
 
-  let shipping = await user.shippingAddress.addressLine1
-  console.log("shipping is " + shipping)
-  try{
-    let shippingParams = {
-      "shippingAddress.addressLine1": req.body.addressLine1S,
-      "shippingAddress.addressLine2": req.params.addressLine2S,
-      "shippingAddress.city": req.body.cityS,
-      "shippingAddress.country": req.body.countyS,
-      "shippingAddress.postCode": req.body.postCodeS
-    }      
-    User.findOneAndUpdate({_id: userId}, shippingParams);
-  }
-  catch(error){
-    console.log(error)
-  } 
-  
-  let billing = await user.billingAddress.addressLine1  
-  console.log("billing is " + billing)
-  try{
-    let billingParams = {
-      "billingAddress.addressLine1": req.body.addressLine1B,
-      "billingAddress.addressLine2": req.params.addressLine2B,
-      "billingAddress.city": req.body.cityB,
-      "billingAddress.country": req.body.countyB,
-      "billingAddress.postCode": req.body.postCodeB
-    }      
-    User.findOneAndUpdate({_id: userId}, billingParams);
+      })
   }
   catch(error){
     console.log(error)
