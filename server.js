@@ -4,10 +4,8 @@ require("dotenv").config();
 
 const flash = require("connect-flash");
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY
-const stripePublicKey = process.env.STRIPE_PUBLIC_KEY
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY)
 
-console.log(stripePublicKey,stripeSecretKey)
 
 const mongoose = require("mongoose");
 
@@ -28,7 +26,7 @@ const usersRouter = require("./routes/users");
 const productRouter = require("./routes/products");
 const cartRouter = require("./routes/cart");
 const reviewRouter = require("./routes/reviews");
-const transactionRouter = require("./routes/transactions")
+// const transactionRouter = require("./routes/transactions")
 
 app.use(expressLayouts);
 
@@ -64,7 +62,7 @@ app.use("/", usersRouter);
 app.use("/", productRouter);
 app.use("/", cartRouter);
 app.use("/", reviewRouter);
-app.use("/", transactionRouter);
+// app.use("/", transactionRouter);
 
 app.set("view engine", "ejs");
 
@@ -156,7 +154,31 @@ app.post('/api/upload', async (req, res) => {
     }
   });
 
-
+  app.post("/stripe/charge", cors(), async (req, res) => {
+    console.log("stripe-routes.js 9 | route reached", req.body);
+    let { amount, id } = req.body;
+    console.log("stripe-routes.js 10 | amount and id", amount, id);
+    try {
+      const payment = await stripe.paymentIntents.create({
+        amount: amount,
+        currency: "GBP",
+        description: "Agora",
+        payment_method: id,
+        confirm: true,
+      });
+      console.log("stripe-routes.js 19 | payment", payment);
+      res.json({
+        message: "Payment Successful",
+        success: true,
+      });
+    } catch (error) {
+      console.log("stripe-routes.js 17 | error", error);
+      res.json({
+        message: "Payment Failed",
+        success: false,
+      });
+    }
+  });
 
 
 app.listen(PORT, () => {
