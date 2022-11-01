@@ -145,7 +145,7 @@ exports.removeItem = async (req, res) => {
     return res.status(400).send({ status: false, message: "Invalid user ID" });
 
   let product = Product.findById(req.query.productId);
-  
+  let productId = req.query.productId
 
   if (!product)
     return res.status(400).send({ status: false, message: "Invalid product" });
@@ -153,13 +153,15 @@ exports.removeItem = async (req, res) => {
   else {
     product = Product.findById(req.query.productId)
     .then( async (product) => {
-      let cart = await Cart.findOne({userId: userId}).populate('products.productId');
+      let cart = await Cart.findOne({userId: userId})
+      
         if (cart)
+        console.log(typeof productId)
         
             {
-              
-              let i = cart.products.findIndex((p) => p.productId._id == productId);
-            console.log("index is " + i)
+              let i = cart.products.findIndex((p) => p.productId.toString() == productId);
+              console.log(typeof productId)
+              console.log(i)
         
           
           cart.products.splice(i, 1);  
