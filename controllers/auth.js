@@ -173,7 +173,7 @@ exports.auth_update_get = async (req, res) => {
 exports.auth_update_put = async (req, res) => {
     console.log(req.body._id)
     let user = await User.findById(req.body._id)
-    console.log(user.firstName) // NEEDS TO BE UPDATED WHEN SIGNIN IS WORKING ON FE
+    console.log(user.firstName) 
     let seller = ""
     try{
         console.log(req.body)
