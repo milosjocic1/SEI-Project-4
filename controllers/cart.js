@@ -172,13 +172,10 @@ exports.removeItem = async (req, res) => {
     })
   }
 
-  exports.shippingAndBilling = async (req, res) => {
-    
+exports.shippingAndBilling = async (req, res) => {
+
   console.log(req.body.addressLine1S)
-  console.log(req.body.addressLine2S)
-  console.log(req.body.cityS)
-  console.log(req.body.countyS)
-  console.log(req.body.postCodeS)
+  console.log(req.body.addressLine1B)
   let userId = req.query.userId.trim();
   let user = await User.findById(userId)
   try{
@@ -191,17 +188,24 @@ exports.removeItem = async (req, res) => {
             city: req.body.cityS,
             county: req.body.countyS,
             postCode: req.body.postCodeS
-          },
-          billingAddress: {
-            addressLine1: req.body.addressLine1B,
-            addressLine2: req.body.addressLine2B,
-            city: req.body.cityB,
-            county: req.body.countyB,
-            postCode: req.body.postCodeB
-          }         
+          }      
         }},
+
         {new: true, runValidators: true,useFindAndModify: false}
         )
+        await User.findByIdAndUpdate(user._id,
+          {
+            $set: {
+              billingAddress: {
+                addressLine1: req.body.addressLine1B,
+                addressLine2: req.body.addressLine2B,
+                city: req.body.cityB,
+                county: req.body.countyB,
+                postCode: req.body.postCodeB
+              }      
+            }},
+            {new: true, runValidators: true,useFindAndModify: false}
+            )
 
   }
   catch(error){
