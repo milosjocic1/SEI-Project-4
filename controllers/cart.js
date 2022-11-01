@@ -119,31 +119,66 @@ exports.getCart = async (req, res) => {
 //     .send({ status: false, message: "Item does not exist in cart" });
 // };
 
+// exports.removeItem = async (req, res) => {
+//   let userId = req.query.userId;
+//   let user = await User.exists({ _id: userId });
+//   let productId = req.body.productId;
+
+//   if (!userId || !isValidObjectId(userId) || !user)
+//     return res.status(400).send({ status: false, message: "Invalid user ID" });
+
+//   let cart = await Cart.findOne({ userId: userId });
+//   if (!cart)
+//     return res
+//       .status(404)
+//       .send({ status: false, message: "Cart not found for this user" });
+
+//   let itemIndex = cart.products.findIndex((p) => p.productId == productId);
+//   if (itemIndex > -1) {
+//     cart.products.splice(itemIndex, 1);
+//     cart = await cart.save();
+//     return res.status(200).send({ status: true, updatedCart: cart });
+//   }
+//   res
+//     .status(400)
+//     .send({ status: false, message: "Item does not exist in cart" });
+// };
+
 exports.removeItem = async (req, res) => {
   let userId = req.query.userId;
   let user = await User.exists({ _id: userId });
-  let productId = req.body.productId;
-
   if (!userId || !isValidObjectId(userId) || !user)
     return res.status(400).send({ status: false, message: "Invalid user ID" });
 
-  let cart = await Cart.findOne({ userId: userId });
-  if (!cart)
-    return res
-      .status(404)
-      .send({ status: false, message: "Cart not found for this user" });
+  let product = Product.findById(req.query.productId);
+  
 
-  let itemIndex = cart.products.findIndex((p) => p.productId == productId);
-  if (itemIndex > -1) {
-    cart.products.splice(itemIndex, 1);
-    cart = await cart.save();
-    return res.status(200).send({ status: true, updatedCart: cart });
+  if (!product)
+    return res.status(400).send({ status: false, message: "Invalid product" });
+
+  else {
+    product = Product.findById(req.query.productId)
+    .then( async (product) => {
+      let cart = await Cart.findOne({userId: userId});
+        if (cart)
+        
+            {
+              console.log(cart);
+              let i = cart.products.findIndex((p) => p.productId == {product});
+            console.log("index is " + i)
+        
+
+          cart.products.splice(i, 1);  
+          cart.save();   
+          console.log(cart)
+          return res.status(200).send({ status: true, updatedCart: cart });}
+    }) 
+    .catch((err) => {
+      console.log(err)
+    })
   }
-  res
-    .status(400)
-    .send({ status: false, message: "Item does not exist in cart" });
-};
 
+}
 
 exports.shippingAndBilling = async (req, res) => {
   console.log("hi")
