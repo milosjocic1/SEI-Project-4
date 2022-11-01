@@ -17,7 +17,6 @@ const transactionSchema = mongoose.Schema({
         postCode: String
     },
     totalAmount: Number,
-    tax: Number,
     paymentMethod: String,
     cart: [{
         type: mongoose.Schema.Types.ObjectId,
