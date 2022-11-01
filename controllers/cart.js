@@ -259,6 +259,7 @@ exports.removeItem = async (req, res) => {
         }},
         {new: true, runValidators: true,useFindAndModify: false}
         )
+
   }
   catch(error){
     console.log(error)
