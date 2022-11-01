@@ -164,17 +164,26 @@ app.post('/api/upload', async (req, res) => {
   app.get("/search", async (req, res, next) => {
     try {
       const { q } = req.query;
-      const products = await Product.find({
+      if (q === "all") {
+       const products = await Product.find()
+       res.status(201).json({
+        status: "success",
+        message: "Here is a list of all products",
+        products,
+      })
+      }
+      else
+      {const products = await Product.find({
         title: { $regex: q, $options: "i" },
       });
 
-      if (products.length < 1) throw new ErrorHandler(404, "No product found");
+      // if (products.length < 1) throw new ErrorHandler(404, "No product found");
 
       res.status(201).json({
         status: "success",
         message: "Product has been found successfully",
         products,
-      });
+      })};
     } catch (error) {
       next(error);
     }
