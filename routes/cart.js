@@ -18,7 +18,6 @@ router.post('/cart', cartCtrl.addItemToCart);
 router.get('/cart', cartCtrl.getCart);
 // router.patch('/cart', cartCtrl.decreaseQuantity);
 router.delete('/cart', cartCtrl.removeItem);
-router.post('/shipping_billing/update', cartCtrl.shippingAndBilling);
 // router.post('/cart/add', cartCtrl.cart_addItem_post);
 // router.get('/cart/detail', cartCtrl.cart_show_get);
 // router.get('/cart/delete', cartCtrl.cart_delete_get);
