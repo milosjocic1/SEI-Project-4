@@ -120,7 +120,6 @@ exports.auth_signin_post = async(req, res) => {
             user: {
                 id: user._id,
                 name: user.firstName
-
             }
         }
         jwt.sign(
