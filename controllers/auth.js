@@ -16,7 +16,6 @@ const salt = 10
 const cloudinary = require("../utils/cloudinary");
 const upload = require("../utils/multer");
 
-
 // __________________________________ AUTH SIGNUP GET __________________________________ //
 exports.auth_signup_get = (req, res) => {
     res.render("auth/signup")
@@ -172,12 +171,14 @@ exports.auth_update_get = async (req, res) => {
 
 // __________________________________ AUTH UPDATE POST __________________________________ //
 
-exports.auth_update_post = async (req, res) => {
-    let user = await User.findById(req.query.userId) // NEEDS TO BE UPDATED WHEN SIGNIN IS WORKING ON FE
+exports.auth_update_put = async (req, res) => {
+    console.log(req.body._id)
+    let user = await User.findById(req.body._id)
+    console.log(user.firstName) // NEEDS TO BE UPDATED WHEN SIGNIN IS WORKING ON FE
     let seller = ""
     try{
         console.log(req.body)
-        User.findByIdAndUpdate(user._id, req.body)
+        await User.findByIdAndUpdate(user._id, req.body, { new: true })
         if(user.userRole === "seller"){
             console.log("user is " +user)
             seller = await Seller.find({user: {$in: [user._id]}})

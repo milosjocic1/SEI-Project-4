@@ -2,8 +2,6 @@ const {Cart} = require("../models/Cart");
 const {User} = require("../models/User");
 const {Product} = require("../models/Product");
 const { isValidObjectId } = require("mongoose");
-var ObjectID = require('mongodb').ObjectId;
-
 const moment = require('moment');
 
 exports.addItemToCart = async (req, res) => {
@@ -13,7 +11,6 @@ exports.addItemToCart = async (req, res) => {
     return res.status(400).send({ status: false, message: "Invalid user ID" });
 
   let product = Product.findById(req.query.productId);
-  
 
   if (!product)
     return res.status(400).send({ status: false, message: "Invalid product" });
@@ -25,7 +22,6 @@ exports.addItemToCart = async (req, res) => {
 
         if (cart) {
             let i = cart.products.findIndex((p) => p.productId == product);
-            console.log("index is " + i)
         
             if (i > -1) {
               let productItem = cart.products[i];
@@ -34,7 +30,6 @@ exports.addItemToCart = async (req, res) => {
             } else {
           cart.products.push({ productId: product, quantity: 1 });  
           cart.save();   
-          console.log(cart)
           return res.status(200).send({ status: true, updatedCart: cart });
         }
         } 
@@ -76,7 +71,6 @@ exports.getCart = async (req, res) => {
     else{
       let total = 0;
       cart.products.map((product) => {
-        console.log(product)
         total += ((product.quantity * product.productId.price) + product.productId.shippingRate)
         return total
       })
@@ -178,30 +172,37 @@ exports.removeItem = async (req, res) => {
     })
   }
 
-}
-
-exports.shippingAndBilling = async (req, res) => {
-  console.log("hi")
-  let userId = req.query.userId;
-  let user = await User.findById(userId);
-  console.log("hi")
+  exports.shippingAndBilling = async (req, res) => {
+    
+  console.log(req.body.addressLine1S)
+  console.log(req.body.addressLine2S)
+  console.log(req.body.cityS)
+  console.log(req.body.countyS)
+  console.log(req.body.postCodeS)
+  let userId = req.query.userId.trim();
+  let user = await User.findById(userId)
   try{
-    User.findOneAndUpdate({_id: user._id},
+    await User.findByIdAndUpdate(user._id,
       {
         $set: {
-          "shippingAddress.addressLine1": req.body.addressLine1S,
-          "shippingAddress.addressLine2": req.body.addressLine2S,
-          "shippingAddress.city": req.body.cityS,
-          "shippingAddress.country": req.body.countyS,
-          "shippingAddress.postCode": req.body.postCodeS,
-          "billingAddress.addressLine1": req.body.addressLine1B,
-          "billingAddress.addressLine2": req.body.addressLine2B,
-          "billingAddress.city": req.body.cityB,
-          "billingAddress.country": req.body.countyB,
-          "billingAddress.postCode": req.body.postCodeB         
-        }
+          shippingAddress: {
+            addressLine1: req.body.addressLine1S,
+            addressLine2: req.body.addressLine2S,
+            city: req.body.cityS,
+            county: req.body.countyS,
+            postCode: req.body.postCodeS
+          },
+          billingAddress: {
+            addressLine1: req.body.addressLine1B,
+            addressLine2: req.body.addressLine2B,
+            city: req.body.cityB,
+            county: req.body.countyB,
+            postCode: req.body.postCodeB
+          }         
+        }},
+        {new: true, runValidators: true,useFindAndModify: false}
+        )
 
-      })
   }
   catch(error){
     console.log(error)
