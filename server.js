@@ -19,6 +19,8 @@ app.use(express.static("public"));
 
 const expressLayouts = require("express-ejs-layouts");
 
+const {Transaction} = "../routes/Transaction"
+
 // Import routes here
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
@@ -50,6 +52,7 @@ app.use(function(req, res, next){
   res.locals.currentUser = req.user
   next();
 })
+
 
 // app.get("/", function(req, res) {
 //     res.send("Hello");
@@ -193,6 +196,7 @@ app.post('/api/upload', async (req, res) => {
   app.post("/stripe/charge", cors(), async (req, res) => {
     console.log("stripe-routes.js 9 | route reached", req.body);
     let { amount, id } = req.body;
+    let user = await User.findById(req.query.userId)
     console.log("stripe-routes.js 10 | amount and id", amount, id);
     try {
       const payment = await stripe.paymentIntents.create({
@@ -202,11 +206,20 @@ app.post('/api/upload', async (req, res) => {
         payment_method: id,
         confirm: true,
       });
+      
+      // const transaction = await Transaction.create({
+      //   totalAmount: amount,
+      //   currency: "GBP",
+      //   paymentMethod: id
+      // });
+
       console.log("stripe-routes.js 19 | payment", payment);
       res.json({
         message: "Payment Successful",
         success: true,
       });
+
+
     } catch (error) {
       console.log("stripe-routes.js 17 | error", error);
       res.json({
