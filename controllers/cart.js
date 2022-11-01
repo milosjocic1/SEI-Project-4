@@ -153,15 +153,15 @@ exports.removeItem = async (req, res) => {
   else {
     product = Product.findById(req.query.productId)
     .then( async (product) => {
-      let cart = await Cart.findOne({userId: userId});
+      let cart = await Cart.findOne({userId: userId}).populate('products.productId');
         if (cart)
         
             {
-              console.log(cart);
-              let i = cart.products.findIndex((p) => p.productId == {product});
+              
+              let i = cart.products.findIndex((p) => p.productId._id == productId);
             console.log("index is " + i)
         
-
+          
           cart.products.splice(i, 1);  
           cart.save();   
           console.log(cart)
@@ -212,3 +212,4 @@ exports.shippingAndBilling = async (req, res) => {
     console.log(error)
   } 
 }  
+}
