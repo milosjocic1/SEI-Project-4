@@ -219,14 +219,24 @@ app.post('/api/upload', async (req, res) => {
                   cart.products.forEach((item) => {
                     Product.findOne({_id:item.productId})
                     .then((product) => {
-                      console.log(product.isSold)
+
                       product.update({isSold: true}, function (err, result) {
                         if (err){
                             console.log(err)
                         }else{
                             console.log("Result :", result) 
                         }
-                    });
+                      })
+
+                      cart.update({$pull: {products: item}}, { safe: true, multi:true }, function (err, result) {
+                        console.log("updating cart")
+                        if (err){
+                            console.log(err)
+                        }else{
+                            console.log("Result :", result) 
+                        }
+                    })
+
                     }).catch((err) => {
                       console.log(err)
                     })
@@ -235,12 +245,12 @@ app.post('/api/upload', async (req, res) => {
                 .catch((err)=> {
                   console.log(err)
                 })
-            }).catch({
-
-            })
+            }).catch((err)=> {
+                console.log(err)
+              })
 
             console.log("stripe-routes.js 19 | payment", payment);
-            return res.status(200).send({transaction});
+            return res.status(200).send({transaction, cart});
           }
       }
     } catch (error) {
@@ -251,6 +261,8 @@ app.post('/api/upload', async (req, res) => {
       });
     }
   });
+
+  
 
 app.listen(PORT, () => {
   console.log(PORT)
