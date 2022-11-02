@@ -43,6 +43,10 @@ const productSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Seller'
     }],
+    isSold: {
+        type: Boolean,
+        default: false
+    }
     // favourite: [{
     //     type: mongoose.Schema.Types.ObjectId,
     //     ref: 'Favourite'

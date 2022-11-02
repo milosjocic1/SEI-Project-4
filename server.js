@@ -19,8 +19,6 @@ app.use(express.static("public"));
 
 const expressLayouts = require("express-ejs-layouts");
 
-const {Transaction} = "../routes/Transaction"
-
 // Import routes here
 const indexRouter = require("./routes/index");
 const authRouter = require("./routes/auth");
@@ -70,10 +68,12 @@ app.use("/", searchRouter);
 app.set("view engine", "ejs");
 
 // Cloudinary test - can remove and put in other files later
-const { cloudinary } = require('./utils/cloudinary');
+const { cloudinary } = require("./utils/cloudinary");
 const cors = require("cors");
-const { User } = require('./models/User');
-const { Product } = require('./models/Product');
+const { User } = require("./models/User");
+const { Product } = require("./models/Product");
+const { Transaction } = require("./models/Transaction");
+const { Cart } = require("./models/Cart");
 
 // const bodyParser = require('body-parser')
 
@@ -189,9 +189,11 @@ app.post('/api/upload', async (req, res) => {
   app.post("/stripe/charge", cors(), async (req, res) => {
     console.log("stripe-routes.js 9 | route reached", req.body);
     let { amount, id } = req.body;
-    let user = await User.findById(req.query.userId)
+    let userId = req.body.userId;
+    let user = await User.findOne({ _id: userId})
     console.log("stripe-routes.js 10 | amount and id", amount, id);
     try {
+
       const payment = await stripe.paymentIntents.create({
         amount: amount,
         currency: "GBP",
@@ -199,20 +201,48 @@ app.post('/api/upload', async (req, res) => {
         payment_method: id,
         confirm: true,
       });
-      
-      // const transaction = await Transaction.create({
-      //   totalAmount: amount,
-      //   currency: "GBP",
-      //   paymentMethod: id
-      // });
+      if (payment){
+       let cart = await Cart.findOne({userId: userId})
+          if (cart) {
+            const transaction = new Transaction({
+              user: user,
+              totalAmount: amount,
+              currency: "GBP",
+              paymentMethod: id,
+              cart: cart,
+              billingAddress: user.billingAddress
+            })
+            transaction.save().then(() =>{
+                user.transaction.push(transaction.id)
+                user.save()
+                .then(() => {
+                  cart.products.forEach((item) => {
+                    Product.findOne({_id:item.productId})
+                    .then((product) => {
+                      console.log(product.isSold)
+                      product.update({isSold: true}, function (err, result) {
+                        if (err){
+                            console.log(err)
+                        }else{
+                            console.log("Result :", result) 
+                        }
+                    });
+                    }).catch((err) => {
+                      console.log(err)
+                    })
+                  })
+                })
+                .catch((err)=> {
+                  console.log(err)
+                })
+            }).catch({
 
-      console.log("stripe-routes.js 19 | payment", payment);
-      res.json({
-        message: "Payment Successful",
-        success: true,
-      });
+            })
 
-
+            console.log("stripe-routes.js 19 | payment", payment);
+            return res.status(200).send({transaction});
+          }
+      }
     } catch (error) {
       console.log("stripe-routes.js 17 | error", error);
       res.json({
@@ -222,12 +252,10 @@ app.post('/api/upload', async (req, res) => {
     }
   });
 
-
 app.listen(PORT, () => {
   console.log(PORT)
     console.log(`Agora is running on port ${PORT}`);
   });
-
 
 // Database Connection
 mongoose.connect(process.env.DATABASE_URL,
