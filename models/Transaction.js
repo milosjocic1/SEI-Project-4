@@ -1,7 +1,10 @@
 const mongoose = require('mongoose');
 
 const transactionSchema = mongoose.Schema({
-
+    user: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
     shippingAddress: {
         addressLine1: String,
         addressLine2: String,
@@ -17,6 +20,7 @@ const transactionSchema = mongoose.Schema({
         postCode: String
     },
     totalAmount: Number,
+    currency: String,
     paymentMethod: String,
     cart: [{
         type: mongoose.Schema.Types.ObjectId,
@@ -27,6 +31,6 @@ const transactionSchema = mongoose.Schema({
     timestamps: true   
 });
 
-const Transaction = mongoose.model('Transaction', transactionSchema);
+const Transaction = mongoose.model("Transaction", transactionSchema);
 
 module.exports = {Transaction};
