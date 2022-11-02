@@ -248,7 +248,7 @@ app.post('/api/upload', async (req, res) => {
               })
 
             console.log("stripe-routes.js 19 | payment", payment);
-            return res.status(200).send({transaction, cart});
+            return res.status(200).json({success: true, transaction, cart});
           }
       }
     } catch (error) {

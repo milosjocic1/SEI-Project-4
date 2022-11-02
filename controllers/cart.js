@@ -5,7 +5,8 @@ const { isValidObjectId } = require("mongoose");
 const moment = require('moment');
 
 exports.addItemToCart = async (req, res) => {
-  let userId = req.query.userId;
+  let userId = req.query.userId.trim();
+  console.log("user id is " + userId)
   let user = await User.exists({ _id: userId });
   if (!userId || !isValidObjectId(userId) || !user)
     return res.status(400).send({ status: false, message: "Invalid user ID" });
@@ -50,7 +51,7 @@ exports.addItemToCart = async (req, res) => {
 }
       
 exports.getCart = async (req, res) => {
-  let userId = req.query.userId.trim();
+  let userId = req.query.userId;
   let user = await User.findById(userId);
 
   if (!userId || !isValidObjectId(userId) || !user)
@@ -139,7 +140,7 @@ exports.getCart = async (req, res) => {
 // };
 
 exports.removeItem = async (req, res) => {
-  let userId = req.query.userId;
+  let userId = req.query.userId.trim();
   let user = await User.exists({ _id: userId });
   if (!userId || !isValidObjectId(userId) || !user)
     return res.status(400).send({ status: false, message: "Invalid user ID" });
