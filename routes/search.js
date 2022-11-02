@@ -6,8 +6,6 @@ const router = express.Router();
 
 router.use(methodOverride('_method'));
 
-// router.use(express.urlencoded({ extended: true }));
-
 router.use(express.json());
 const searchCtrl = require("../controllers/search");
 
