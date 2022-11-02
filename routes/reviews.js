@@ -6,15 +6,11 @@ const router = express.Router();
 
 router.use(methodOverride('_method'));
 
-// router.use(express.urlencoded({ extended: true }));
-
 router.use(express.json());
 const reviewCtrl = require("../controllers/reviews");
 
 router.get('/review/add', reviewCtrl.review_create_get);
 router.post('/review/add', reviewCtrl.review_create_post);
-// router.get('/review/index', reviewCtrl.review_index_get);
-// router.get('/review/detail', reviewCtrl.review_show_get);
 router.delete('/review/delete', reviewCtrl.review_delete_get);
 router.get('/review/edit', reviewCtrl.review_edit_get);
 router.put('/review/update', reviewCtrl.review_update_put);

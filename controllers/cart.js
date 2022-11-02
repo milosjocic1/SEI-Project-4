@@ -163,7 +163,7 @@ exports.removeItem = async (req, res) => {
               console.log(typeof productId)
               console.log(i)
         
-
+          
           cart.products.splice(i, 1);  
           cart.save();   
           console.log(cart)
