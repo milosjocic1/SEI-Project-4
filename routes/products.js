@@ -6,8 +6,6 @@ const router = express.Router();
 
 router.use(methodOverride('_method'));
 
-// router.use(express.urlencoded({ extended: true }));
-
 router.use(express.json());
 const productCtrl = require("../controllers/products");
 
@@ -19,8 +17,5 @@ router.delete('/product/delete', productCtrl.product_delete_get);
 router.get('/product/edit', productCtrl.product_edit_get);
 router.put('/product/update', productCtrl.product_update_put);
 
-
-// Search
-// router.post("/product/search", productCtrl.product_search_post);
 
 module.exports = router;

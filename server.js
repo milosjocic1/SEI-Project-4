@@ -173,8 +173,6 @@ app.post('/api/upload', async (req, res) => {
         title: { $regex: q, $options: "i" },
       });
 
-      // if (products.length < 1) throw new ErrorHandler(404, "No product found");
-
       res.status(201).json({
         status: "success",
         message: "Product has been found successfully",
