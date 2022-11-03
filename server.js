@@ -77,28 +77,30 @@ const { Cart } = require("./models/Cart");
 
 // const bodyParser = require('body-parser')
 
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
-// replace bodyParser with express
+app.use(express.json({limit: '50mb'}));
+app.use(
+  express.urlencoded({ limit: '50mb',})
+);
+
 app.use(cors());
 
-app.get("/api/images", async (req, res) => {
-  const { resources } = await cloudinary.search
-    .expression("folder:bnjbdd6e")
-    .sort_by("public_id", "desc")
-    .max_results(30)
-    .execute();
-  const publicIds = resources.map((file) => file.public_id);
-  res.send("publicIds");
-});
-app.post("/api/upload", async (req, res) => {
-  try {
-    const fileStr = req.body.data;
-    const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
-      upload_preset: "agora_images",
-    });
-    console.log(uploadedResponse.url);
-    User.findById(req.query.userId)
+
+app.get('/api/images', async (req, res) => {
+  const {resources} = await cloudinary.search.expression('folder:bnjbdd6e')
+  .sort_by('public_id', 'desc')
+  .max_results(30)
+  .execute();
+  const publicIds = resources.map( file => file.public_id);
+  res.send('publicIds')
+})
+app.post('/api/upload', async (req, res) => {
+    try {
+      const fileStr = req.body.data;
+      const uploadedResponse = await cloudinary.uploader.upload(fileStr, {
+        upload_preset: 'agora_images'
+      })
+      console.log(uploadedResponse.url)
+      User.findById(req.query.userId)
       .then((user) => {
         user.cloudinary_url = uploadedResponse.url;
         user.save();
@@ -144,9 +146,21 @@ app.get("/search", async (req, res, next) => {
         status: "success",
         message: "Here is a list of all products",
         products,
+      })
+      }
+      else if (q === "fashion" || q === "motors" || q === "electronics" || q === "office-supplies" || q === "home-garden" || q === "health-beauty" || 
+      q === "sports-hobbies-leisures" || q === "collectables-art" )
+      {const products = await Product.find({
+        category: { $regex: q, $options: "i" },
       });
-    } else {
-      const products = await Product.find({
+
+      res.status(201).json({
+        status: "success",
+        message: "Product has been found successfully",
+        products,
+      })}
+      else
+      {const products = await Product.find({
         title: { $regex: q, $options: "i" },
       });
 
