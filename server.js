@@ -175,6 +175,17 @@ app.post('/api/upload', async (req, res) => {
         products,
       })
       }
+      else if (q === "fashion" || q === "motors" || q === "electronics" || q === "office-supplies" || q === "home-garden" || q === "health-beauty" || 
+      q === "sports-hobbies-leisures" || q === "collectables-art" )
+      {const products = await Product.find({
+        category: { $regex: q, $options: "i" },
+      });
+
+      res.status(201).json({
+        status: "success",
+        message: "Product has been found successfully",
+        products,
+      })}
       else
       {const products = await Product.find({
         title: { $regex: q, $options: "i" },
