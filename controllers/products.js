@@ -1,8 +1,5 @@
 const { Seller } = require("../models/Seller");
-const { Favourite } = require("../models/Favourite");
 const { Product } = require("../models/Product");
-
-const moment = require("moment");
 
 exports.product_create_get = (req, res) => {
   Seller.find()
@@ -13,8 +10,6 @@ exports.product_create_get = (req, res) => {
       console.log(err);
     });
 };
-
-// HTTP POST for product
 
 exports.product_create_post = (req, res) => {
   let product = new Product(req.body);
@@ -40,18 +35,6 @@ exports.product_index_get = (req, res) => {
     .populate("seller")
     .then((products) => {
       res.json({ products: products });
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};
-
-// Won't need to be used in React
-exports.product_show_get = (req, res) => {
-  Product.findById(req.query.id)
-    .populate("seller")
-    .then((product) => {
-      res.json({ product });
     })
     .catch((err) => {
       console.log(err);
@@ -97,5 +80,3 @@ exports.product_update_put = (req, res) => {
       console.log(err);
     });
 };
-
-
