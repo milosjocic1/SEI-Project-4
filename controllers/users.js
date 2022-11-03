@@ -1,16 +1,8 @@
 const { User } = require("../models/User");
-const { Favourite } = require("../models/Favourite");
-const { Review } = require("../models/Review");
 const { Seller } = require("../models/Seller");
-// const {Transaction} = require("../models/Transaction")
-
-// __________________________________ USER DASHBOARD GET  __________________________________ //
 
 exports.user_dashboard_get = async (req, res) => {
-  let user = await User.findById(req.query.userId).populate(
-    "favourite",
-    "review"
-  ); 
+  let user = await User.findById(req.query.userId).populate("review"); 
   let seller = "";
   seller = await Seller.find({ user: { $in: [user._id] } })
     .populate("product", "review")
