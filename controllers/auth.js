@@ -70,19 +70,17 @@ exports.auth_signin_get = (req, res) => {
 
 exports.auth_signin_post = async (req, res) => {
   let { emailAddress, password } = req.body;
-  console.log(emailAddress);
 
   try {
     let user = await User.findOne({ emailAddress });
-    console.log(user);
 
     if (!user) {
       return res.json({ message: "User not found" }).status(400);
     }
     // password comparision
     const isMatch = await bcrypt.compareSync(password, user.password);
-    console.log(password); //Plain text password
-    console.log(user.password); // Encrypted password from DB
+    // console.log(password); //Plain text password
+    // console.log(user.password); // Encrypted password from DB
 
     if (!isMatch) {
       return res.json({ message: "Password not matched" }).status(400);
