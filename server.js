@@ -52,10 +52,6 @@ app.use(function (req, res, next) {
   next();
 });
 
-// app.get("/", function(req, res) {
-//     res.send("Hello");
-// });
-
 // Mount routes here
 app.use("/", indexRouter);
 app.use("/", authRouter);
