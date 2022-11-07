@@ -139,7 +139,7 @@ app.get("/search", async (req, res, next) => {
   try {
     const { q } = req.query;
     if (q === "all") {
-      const products = await Product.find();
+      const products = await Product.find().populate('seller');
       res.status(201).json({
         status: "success",
         message: "Here is a list of all products",
@@ -150,7 +150,7 @@ app.get("/search", async (req, res, next) => {
       q === "sports-hobbies-leisures" || q === "collectables-art" )
       {const products = await Product.find({
         category: { $regex: q, $options: "i" },
-      });
+      }).populate('seller');
 
       res.status(201).json({
         status: "success",
@@ -160,7 +160,7 @@ app.get("/search", async (req, res, next) => {
       else
       {const products = await Product.find({
         title: { $regex: q, $options: "i" },
-      });
+      }).populate('seller');
 
       res.status(201).json({
         status: "success",
