@@ -4,16 +4,16 @@
  
 ## Project Overview
  
-The objective of this project was to create a MERN-stack web application in a group of four in the timeframe of a week. We created marketplace app called Agora, where users can browse,buy and sell products.
+The objective of this project was to create a MERN-stack web application in a group of four in the timeframe of a week. We created a marketplace app called Agora, where users can browse,buy and sell products.
  
 ## Brief
  
 - Create a working full-stack, single-page application.
 - Incorporate MERN-stack technologies (MongoDB/Mongoose, Express, React, Node)
 - Have a well styled interactive front-end
-- Communicates with Express backend via AJAX.
-- Implement token-based authentication.
-- Have a well-scoped feature set.
+- Communicates with Express back-end via AJAX
+- Implement token-based authentication
+- Have a well-scoped feature set
  
 ## Deployment Link
  
@@ -40,22 +40,22 @@ Agora runs on Heroku, so there are no code installation requirements. Just sign 
  
 ### Stage 1: Planning
  
-I took the role of team leader for this project, which came with its own set of responsibilities in regards to management and development flow. I wanted to generate a supportive working environment where everyone had a clear plan of what tasks they would accomplish and had reassurance that we would collaborate as a unit to solve issues that any team member encountered. We used Slack and Zoom to communicate with eachother through the project.
+I took the role of team leader for this project, which came with its own set of responsibilities in regards to management and development flow. I wanted to generate a supportive working environment where everyone had a clear plan of what tasks they would accomplish and had reassurance that we would collaborate as a unit to solve issues that any team member encountered. We used Slack and Zoom to communicate with each other through the project.
  
-I started by working with team mates to establish a development process:
+I started by working with teammates to establish a development process:
 1. Brainstorming and choosing a project idea
 2. Creating wireframes, ERDs and user stories
 3. Creating repositories and starting files
 4. Breaking the project down into tasks
 5. Creating a layout for the app
-6. Work on functions and features
+6. Working on functions and features
 7. Testing implemented features
 8. Styling and testing the website
 9. Adding extras / bonus features
  
 Once we had decided on our idea for a marketplace app, I created a [Trello board](https://trello.com/b/ZltaYyqq/agora) which would serve as a task management tool to create, delegate and track tasks for the group. This allowed the group to work together and understand which tasks were being attempted, which tasks had been completed and which tasks were yet to be taken on.
  
-We then created wireframes and ERDs on Figma to map out how we wanted our site to look and what our entity relations would be, which ultimately determine the functionality of the app. We decided on users being able to have buyer and seller accounts, as well as incorporating a cart model that stores selected items before purchase alongside transaction handling funcitonality.
+We then created wireframes and ERDs on Figma to map out how we wanted our site to look and what our entity relations would be, which ultimately determined the functionality of the app. We decided on users being able to have buyer and seller accounts, as well as incorporating a cart model that stores selected items before purchase alongside a transaction handling functionality.
 ![](https://user-images.githubusercontent.com/97313222/201130750-d91a83e7-148c-4c2f-929d-27cc305e85ec.png)
 [Here is a link to our Figma wireframes.](https://www.figma.com/file/WHn9BS8skZiKRXrp6qdsOk/Agora?node-id=16%3A2)
  
@@ -104,13 +104,13 @@ This was completed in a component file ProductCreateForm.js, where I initially u
 ![](https://i.imgur.com/X6T9lIY.png)
 Once the necessary information was supplied by the user, it was sent as a request to the backend which has the seller ID attached to it.
 ![](https://i.imgur.com/gPZosB6.png)
-In the backend, the the product is created in accordance with the Product model schema. A product ID is then attached to the seller in the database, and the information is then passed back to the frontend as a response in JSON.
+In the backend, the product is created in accordance with the Product model schema. A product ID is then attached to the seller in the database, and the information is then passed back to the frontend as a response in JSON.
  
 Image upload with Cloudinary
  
 Images were one of the most important aspects of this website, considering it is a marketplace where it is essential for users to see pictures of items. I opted to use Cloudinary as a cloud-based image management service rather than upload image files locally, as Heroku is known to delete image files after a certain amount of time.
  
-I first needed to configure some settings in Cloudinary, where I added an upload preset which would store the images used in the application. The cloud name, API key and API secret all had to be stated in a dotenv file in the backend, where I also created a cloudinary.js file that would require all of these parameters. Upon uploading a profile image with the sign up form, the user would see a preview of it before submitting the form data. This was written as a function 'previewFile'. A similar function was written so that the same would occur when a seller uploads a product image. I wrote an asynchronous function 'uploadImage' to take care of sending the image to the right places. Base64 encoding is used to convert the binary data of the image into a string which can be more easily transmitted. The fetch API calls the /api/upload API with the user ID attached to it and sends the object containing the base64 data as JSON format to the backend server.
+I first needed to configure some settings in Cloudinary, where I added an upload preset which would store the images used in the application. The cloud name, API key and API secret all had to be stated in a dotenv file in the backend, where I also created a Cloudinary.js file that would require all of these parameters. Upon uploading a profile image with the sign up form, the user would see a preview of it before submitting the form data. This was written as a function 'previewFile'. A similar function was written so that the same would occur when a seller uploads a product image. I wrote an asynchronous function 'uploadImage' to take care of sending the image to the right places. Base64 encoding is used to convert the binary data of the image into a string which can be more easily transmitted. The fetch API calls the /api/upload API with the user ID attached to it and sends the object containing the base64 data as JSON format to the backend server.
 ![](https://i.imgur.com/mxydUSG.png)
  
 I had to also work in the backend in order to connect Cloudinary to the application. I wrote the APIs for the image upload in server.js:
@@ -122,7 +122,7 @@ While Postman was used to check the backend APIs throughout the project, I mainl
 ![](https://i.imgur.com/0DjrrHR.png)
  
 ### Stage 3: Testing and Styling
-Continuously testing our functions through the development process helped us minimise bugs and stay on track for delivering the project. We consulted eachother as a team frequently to gather a variety opinions and test eachother's code to make sure that we had as many eyes and minds available to scope out any issues. We commonly used console.log statements when debugging to see where we were successfully gathering information and where we failed to do so, which pointed us in the right direction when it came to problem solving.
+Continuously testing our functions through the development process helped us minimise bugs and stay on track for delivering the project. We consulted each other as a team frequently to gather a variety of opinions and test each other's code to make sure that we had as many eyes and minds available to scope out any issues. We commonly used console.log statements when debugging to see where we were successfully gathering information and where we failed to do so, which pointed us in the right direction when it came to problem solving.
  
 We wanted our site to be easy to navigate, have a clean, fresh look and feel smooth for the user. For this reason we wanted to use a theme of white, blue and black which was simple, bright and aesthetically pleasing.
 ![](https://i.imgur.com/CJtFyh6.png)
@@ -138,17 +138,17 @@ We used external code for this effect, where a user could scroll through the sli
 I was in charge of deploying the project, which meant having everyone's up-to-date code in the dev branch. I then made pull requests from dev to master in order to have the latest code in the master. As two separate repositories were created for the frontend and backend, I configured build settings in package.json then ran npm build in the terminal to create a production build of the app that combined the frontend and backend files. I then created a Heroku repository and pushed the built app there to deploy it.
  
 ### Bonus features / stretch goals
-Given the size of the task of creating a marketplace app in the timeframe of a week, we did not manage to implement bonus features such as
+Given the size of the task of creating a marketplace app in the timeframe of a week, we did not manage to implement bonus features.
 ## Challenges
 As group leader, I was responsible for merging code, resolving conflicts and ultimately deploying the project. For most of the project, the teammates worked in separate folders and merge conflicts did not arise often- the frontend pair stayed in the frontend, the backend pair stayed in the backend. Towards the end of the project, this started to change as we had created the structure of our app and had to start venturing into full-stack code implementation for other features, in my case Cloudinary which required me to code both backend and frontend. This caused merge conflicts in some scenarios, which were ultimately resolved upon consultation with my teammates and careful selection of which changes to accept, however it was time consuming.
  
-Other than this, I wasn't very confident with my ability in React going into the project, however with enough practice and overcoming frustration it started to make sense to me. It seemed like a completely different approach to building an app compared to working with Django (SEI Project 3) or Express (SEI Project 2), especially considering the group was split into backend and frontend. This put extra importance on communication within the team, as we had to make sure that where we were accurate in how referenced eachother's work when calling server-side APIs in the frontend or sending form data from the client-side to the backend.
+Other than this, I wasn't very confident with my ability in React going into the project, however with enough practice and overcoming frustration it started to make sense to me. It seemed like a completely different approach to building an app compared to working with Django (SEI Project 3) or Express (SEI Project 2), especially considering the group was split into backend and frontend. This put extra importance on communication within the team, as we had to make sure that we were accurate in how we referenced each other's work when calling server-side APIs in the frontend or sending form data from the client-side to the backend.
  
-I must take this opportunity to say that my teammates had excellent work ethic, communicated very well with eachother and created a real support network where we wasted no time in coming to eachother's aid.
+I must take this opportunity to say that my teammates had excellent work ethic, communicated very well with each other and created a real support network where we wasted no time in coming to each other's aid.
  
 ## Wins
  
-Getting a marketplace app with so many React components to work smoothly and be functional was a feat that I am so proud of. The scope of the project was immense and we worked hard and supported eachother to get it done.
+Getting a marketplace app with so many React components to work smoothly and be functional was a feat that I am so proud of. The scope of the project was immense and we worked hard and supported each other to get it done.
  
 Getting the image upload to work, especially on the deployed project, was a big win for me. Considering that with the deployment of previous projects Heroku would erase any image files after a certain amount of time, I wanted to make sure that this project wouldn't have the same issues. Given that images are used on practically every page on the site, I'm happy that I got the upload and display functionalities working.
  
@@ -157,11 +157,12 @@ Getting the image upload to work, especially on the deployed project, was a big 
  
 My general comprehension of React and its benefits for building user interfaces grew significantly throughout the project and I understand why it is such a popular library in the industry. I've become more comfortable with the concepts of props, states, and components.
  
-I've learnt that I can work well not just as a team mate but also as in a leadership role. I gave full cooperation and understood that taking the role of team leader by default meant taking on a lot more responsibility than I had taken before. I performed well in this scenario as I was always in the loop with my group, staying on top of what everyone was doing and any issues that came up. I wasted no time in merging pull requests and resolving conflicts whenever they appeared.
+I've learnt that I can work well not just as a teammate but also in a leadership role. I gave full cooperation and understood that taking the role of team leader by default meant taking on a lot more responsibility than I had taken before. I performed well in this scenario as I was always in the loop with my group, staying on top of what everyone was doing and any issues that came up. I wasted no time in merging pull requests and resolving conflicts whenever they appeared.
  
  
 ## Bugs
 Images uploaded that have a file size of over 100kB are not displayed.
  
 ## Future Improvements
-I've learnt that the component files could have had been structured and the actual components nested in a more organised way. I would also like to add a review feature for purchased products in the future.
+I've learnt that the component files could have been structured and the actual components nested in a more organised way. I would also like to add a review feature for purchased products in the future.
+
